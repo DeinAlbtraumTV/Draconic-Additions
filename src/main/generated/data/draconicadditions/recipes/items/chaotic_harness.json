@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CCC",
-    "CHC",
-    "CSC"
-  ],
   "key": {
     "C": {
       "item": "draconicevolution:medium_chaos_frag"
@@ -13,9 +8,14 @@
       "item": "draconicadditions:draconic_harness"
     },
     "S": {
-      "item": "draconicevolution:chaotic_shield_control_module"
+      "item": "draconicevolution:item_chaotic_shield_control"
     }
   },
+  "pattern": [
+    "CCC",
+    "CHC",
+    "CSC"
+  ],
   "result": {
     "item": "draconicadditions:chaotic_harness"
   }

@@ -7,7 +7,7 @@ import net.minecraft.world.item.ArmorMaterials;
 public class InfusedPotatoArmor extends ArmorItem {
 
 	// Armor Slots - 0=Feet, 1=Legs, 2=Chest, 3=Head
-	public InfusedPotatoArmor(Properties props, EquipmentSlot slotType) {
+	public InfusedPotatoArmor(Properties props, Type slotType) {
 		super(ArmorMaterials.LEATHER, slotType, props);
 	}
 }

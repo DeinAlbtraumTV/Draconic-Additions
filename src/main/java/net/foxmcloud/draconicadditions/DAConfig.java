@@ -5,7 +5,10 @@ import java.util.UUID;
 
 import com.brandon3055.draconicevolution.DEConfig;
 
-import codechicken.lib.config.*;
+import codechicken.lib.config.ConfigCallback;
+import codechicken.lib.config.ConfigCategory;
+import codechicken.lib.config.ConfigFile;
+import codechicken.lib.config.ConfigValue;
 
 public class DAConfig extends DEConfig {
 

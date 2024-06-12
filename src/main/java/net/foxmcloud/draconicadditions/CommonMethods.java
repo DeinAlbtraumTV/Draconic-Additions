@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.brandon3055.brandonscore.utils.ItemNBTHelper;
 import com.brandon3055.draconicevolution.handlers.DESounds;
+import com.brandon3055.draconicevolution.init.DEDamage;
 
 import codechicken.lib.vec.Vector3;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -28,7 +30,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class CommonMethods {
 
-	public static final DamageSource chaosBurst = new DamageSource("chaosBurst").bypassArmor();
 	private static final short gracePeriod = 100;
 
 	/**
@@ -51,8 +52,8 @@ public class CommonMethods {
 	}
 
 	public static void explodeEntity(Vector3 pos, Level world) {
-		world.playSound(null, new BlockPos(pos.x, pos.y, pos.z), DESounds.beam, SoundSource.MASTER, 0.25F, 0.5F);
-		world.playSound(null, new BlockPos(pos.x, pos.y, pos.z), DESounds.fusionComplete, SoundSource.MASTER, 1.0F, 2.0F);
+		world.playSound(null, pos.pos(), DESounds.BEAM.get(), SoundSource.MASTER, 0.25F, 0.5F);
+		world.playSound(null, pos.pos(), DESounds.FUSION_COMPLETE.get(), SoundSource.MASTER, 1.0F, 2.0F);
 		if (world.isClientSide) {
 			for (int i = 0; i < 5; i++) {
 				//BCEffectHandler.spawnFX(DEParticles.ARROW_SHOCKWAVE, world, pos, pos, 128D, 2);
@@ -117,7 +118,7 @@ public class CommonMethods {
 			return true;
 		}
 		if (blockState.hasBlockEntity()) {
-			if (oldTile != null && !oldTile.getType().getRegistryName().toString().contentEquals(blockState.getBlock().getRegistryName().toString())) {
+			if (oldTile != null && !BlockEntityType.getKey(oldTile.getType()).toString().contentEquals(ForgeRegistries.BLOCKS.getKey(blockState.getBlock()).toString())) {
 				world.setBlockEntity(((EntityBlock)blockState.getBlock()).newBlockEntity(pos, blockState));
 			}
 		}
@@ -198,7 +199,7 @@ public class CommonMethods {
 					BlockEntity tileEntity = world.getBlockEntity(pos);
 					if (tileEntity != null) {
 						String savedID = tileNBT.getString("id");
-						String tileID = tileEntity.getType().getRegistryName().toString();
+						String tileID = BlockEntityType.getKey(tileEntity.getType()).toString();
 						if (savedID.contentEquals(tileID)) {
 							tileEntity.deserializeNBT(tileNBT);
 							tileEntity.setLevel(world);
@@ -255,7 +256,7 @@ public class CommonMethods {
 		}
 
 		public static CompoundTag storeBlockInTag(BlockState blockState, CompoundTag tileNBT, CompoundTag nbt) {
-			String blockName = blockState.getBlock().getRegistryName().toString();
+			String blockName = ForgeRegistries.BLOCKS.getKey(blockState.getBlock()).toString();
 			nbt.putString("storedBlock", blockName);
 			nbt.putInt("storedBlockState", Block.getId(blockState));
 			if (tileNBT != null) {

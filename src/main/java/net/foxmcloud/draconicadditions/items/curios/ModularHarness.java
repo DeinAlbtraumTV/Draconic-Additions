@@ -2,6 +2,7 @@ package net.foxmcloud.draconicadditions.items.curios;
 
 import static com.brandon3055.draconicevolution.init.ModuleCfg.removeInvalidModules;
 
+import java.awt.TextComponent;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -34,8 +35,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,10 +78,10 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 	@Override
 	public void handleTick(ItemStack stack, LivingEntity entity, @Nullable EquipmentSlot slot, boolean inEquipModSlot) {
 		boolean validEquipSlot = slot != null ? false : inEquipModSlot;
-		if ((!validEquipSlot && !DAConfig.harnessTickOutOfCuriosSlot) || !hasAttachedBlockEntity(stack, entity.level)) {
+		if ((!validEquipSlot && !DAConfig.harnessTickOutOfCuriosSlot) || !hasAttachedBlockEntity(stack, entity.level())) {
 			return;
 		}
-		Level world = entity.level;
+		Level world = entity.level();
 		BlockPos pos = entity.blockPosition().above();
 		if (!world.isInWorldBounds(pos)) {
 			return;
@@ -98,7 +97,7 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 			if (teStorage != null) {
 				if (isReceiving(stack)) {
 					e.receiveOP(EnergyUtils.extractEnergy(tile, Math.min(e.receiveOP(e.maxReceive(), true), teStorage.getOPStored()), null, false), false);
-					DEContent.capacitor_chaotic.handleTick(stack, entity, slot, inEquipModSlot);
+					DEContent.CAPACITOR_CHAOTIC.get().handleTick(stack, entity, slot, inEquipModSlot);
 				}
 				else if (tile != null) {
 					e.extractOP(EnergyUtils.insertEnergy(tile, e.extractOP(e.maxExtract(), true), null, false), false);
@@ -172,9 +171,9 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
 		String name = getAttachedName(stack);
 		if (name != null && name != "") {
-			tooltip.add(new TranslatableComponent("info.da.modular_harness.storedBlock").withStyle(ChatFormatting.GOLD).append(new TextComponent(getAttachedName(stack)).withStyle(ChatFormatting.GRAY)));
+			tooltip.add(Component.translatable("info.da.modular_harness.storedBlock").withStyle(ChatFormatting.GOLD).append(Component.literal(getAttachedName(stack)).withStyle(ChatFormatting.GRAY)));
 			String rf = Utils.formatNumber(getRFCostForTicks(getCurrentTickSpeed(stack)));
-			tooltip.add(new TranslatableComponent("info.da.opCost", rf).withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.translatable("info.da.opCost", rf).withStyle(ChatFormatting.GRAY));
 		}
 		EnergyUtils.addEnergyInfo(stack, tooltip);
 	}
@@ -196,7 +195,7 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 				block.storeBlockInTag(stack.getOrCreateTag());
 			}
 			else {
-				entity.sendMessage(new TranslatableComponent("info.da.modular_harness.cantmove"), Util.NIL_UUID);
+				entity.sendSystemMessage(Component.translatable("info.da.modular_harness.cantmove"));
 				return false;
 			}
 		}

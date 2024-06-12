@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "draconicadditions:items/crafting/inert_potato_boots"
+    "layer0": "draconicadditions:item/crafting/inert_potato_boots"
   }
 }

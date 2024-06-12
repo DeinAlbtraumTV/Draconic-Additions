@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "draconicadditions:items/tools/animated/chaos_container"
+    "layer0": "draconicadditions:item/tools/animated/chaos_container"
   }
 }

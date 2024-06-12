@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "draconicadditions:items/curios/draconic_necklace"
+    "layer0": "draconicadditions:item/curios/draconic_necklace"
   }
 }

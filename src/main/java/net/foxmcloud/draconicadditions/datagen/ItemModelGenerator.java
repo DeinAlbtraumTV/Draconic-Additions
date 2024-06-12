@@ -1,6 +1,7 @@
 package net.foxmcloud.draconicadditions.datagen;
 
 import com.brandon3055.draconicevolution.api.modules.Module;
+import com.brandon3055.draconicevolution.api.modules.ModuleRegistry;
 
 import net.foxmcloud.draconicadditions.DraconicAdditions;
 import net.foxmcloud.draconicadditions.lib.DAContent;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Created by FoxMcloud5655 on 23/11/22.
@@ -19,84 +21,84 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class ItemModelGenerator extends ItemModelProvider {
 
 	public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-		super(generator, DraconicAdditions.MODID, existingFileHelper);
+		super(generator.getPackOutput(), DraconicAdditions.MODID, existingFileHelper);
 	}
 
 	@Override
 	protected void registerModels() {
-		blockItem(DAContent.chaosLiquefier);
-		blockItem(DAContent.chaosInfuser);
-		simpleItem(DAContent.chaosHeart);
-		simpleItem(DAContent.inertPotatoHelm);
-		simpleItem(DAContent.inertPotatoChest);
-		simpleItem(DAContent.inertPotatoLegs);
-		simpleItem(DAContent.inertPotatoBoots);
-		simpleArmor(DAContent.infusedPotatoHelm);
-		simpleArmor(DAContent.infusedPotatoChest);
-		simpleArmor(DAContent.infusedPotatoLegs);
-		simpleArmor(DAContent.infusedPotatoBoots);
-		simpleItem(DAContent.chaosContainer, "items/tools/animated");
-		simpleCurios(DAContent.necklaceWyvern);
-		simpleCurios(DAContent.necklaceDraconic);
-		simpleCurios(DAContent.necklaceChaotic);
-		simpleCurios(DAContent.harnessWyvern);
-		simpleCurios(DAContent.harnessDraconic);
-		simpleCurios(DAContent.harnessChaotic);
-		simpleItem(DAContent.hermal, new ResourceLocation("minecraft", "item/poisonous_potato"));
-		simpleModule(DAModules.chaoticAutoFeed);
-		simpleModule(DAModules.draconicTickAccel);
-		simpleModule(DAModules.chaoticTickAccel);
-		simpleModule(DAModules.semiStableChaos);
-		simpleModule(DAModules.stableChaos);
-		simpleModule(DAModules.unstableChaos);
-		simpleModule(DAModules.chaosInjector);
+		blockItem(DAContent.chaosLiquifier.get());
+		blockItem(DAContent.chaosInfuser.get());
+		simpleItem(DAContent.chaosHeart.get());
+		simpleItem(DAContent.inertPotatoHelm.get());
+		simpleItem(DAContent.inertPotatoChest.get());
+		simpleItem(DAContent.inertPotatoLegs.get());
+		simpleItem(DAContent.inertPotatoBoots.get());
+		//simpleArmor(DAContent.infusedPotatoHelm.get());
+		//simpleArmor(DAContent.infusedPotatoChest.get());
+		//simpleArmor(DAContent.infusedPotatoLegs.get());
+		//simpleArmor(DAContent.infusedPotatoBoots.get());
+		simpleItem(DAContent.chaosContainer.get(), "item/tools/animated");
+		simpleCurios(DAContent.necklaceWyvern.get());
+		simpleCurios(DAContent.necklaceDraconic.get());
+		simpleCurios(DAContent.necklaceChaotic.get());
+		simpleCurios(DAContent.harnessWyvern.get());
+		simpleCurios(DAContent.harnessDraconic.get());
+		simpleCurios(DAContent.harnessChaotic.get());
+		simpleItem(DAContent.hermal.get(), new ResourceLocation("minecraft", "item/poisonous_potato"));
+		simpleModule(DAModules.chaoticAutoFeed.get());
+		simpleModule(DAModules.draconicTickAccel.get());
+		simpleModule(DAModules.chaoticTickAccel.get());
+		simpleModule(DAModules.semiStableChaos.get());
+		simpleModule(DAModules.stableChaos.get());
+		simpleModule(DAModules.unstableChaos.get());
+		simpleModule(DAModules.chaosInjector.get());
 	}
 
 	private void simpleItem(Item item) {
-		simpleItem(item, "items/crafting");
+		simpleItem(item, "item/crafting");
 	}
 
 	private void simpleArmor(Item item) {
-		simpleItem(item, "items/armor");
+		simpleItem(item, "item/armor");
 	}
 
 	private void simpleCurios(Item item) {
-		simpleItem(item, "items/curios");
+		simpleItem(item, "item/curios");
 	}
 
 	private void simpleItem(Item item, String textureFolder) {
 		if (item == null) return;
-		ResourceLocation reg = item.getRegistryName();
+		ResourceLocation reg = ForgeRegistries.ITEMS.getKey(item);
 		simpleItem(item, new ResourceLocation(reg.getNamespace(), textureFolder + "/" + reg.getPath()));
 	}
 
 	private void simpleItem(Item item, ResourceLocation texture) {
 		if (item == null) return;
-		ResourceLocation reg = item.getRegistryName();
+		ResourceLocation reg = ForgeRegistries.ITEMS.getKey(item);
 		getBuilder(reg.getPath())
 		.parent(new ModelFile.UncheckedModelFile("item/generated"))
 		.texture("layer0", texture);
 	}
 
 	private void simpleModule(Module<?> module) {
-		simpleModule(module, "items/modules");
+		simpleModule(module, "item/modules");
 	}
 
 	private void simpleModule(Module<?> module, String textureFolder) {
 		if (module == null || module.getItem() == null) return;
-		ResourceLocation reg = module.getItem().getRegistryName();
+		ResourceLocation reg = ModuleRegistry.getRegistry().getKey(module);
 		simpleItem(module.getItem(), new ResourceLocation(reg.getNamespace(), textureFolder + "/" + reg.getPath().replace("_module", "")));
 	}
 
 	private void blockItem(Block block) {
 		if (block == null) return;
-		ResourceLocation reg = block.getRegistryName();
+		ResourceLocation reg = ForgeRegistries.BLOCKS.getKey(block);
 		blockItem(block, new ResourceLocation(reg.getNamespace(), "block/" + reg.getPath()));
 	}
 
 	private void blockItem(Block block, ResourceLocation blockModel) {
 		if (block == null) return;
-		ResourceLocation reg = block.getRegistryName();
+		ResourceLocation reg = ForgeRegistries.BLOCKS.getKey(block);
 		getBuilder(reg.getPath())
 		.parent(new ModelFile.UncheckedModelFile(blockModel));
 	}
@@ -106,7 +108,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 	}
 
 	private void dummyModel(Item item) {
-		getBuilder(item.getRegistryName().getPath())
+		getBuilder(ForgeRegistries.ITEMS.getKey(item).getPath())
 		.parent(new ModelFile.UncheckedModelFile("builtin/generated"));
 	}
 

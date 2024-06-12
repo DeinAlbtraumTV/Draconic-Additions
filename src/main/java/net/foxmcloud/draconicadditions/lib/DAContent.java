@@ -1,156 +1,101 @@
 package net.foxmcloud.draconicadditions.lib;
 
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
-
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.function.Supplier;
-
 import com.brandon3055.brandonscore.api.TechLevel;
 import com.brandon3055.brandonscore.blocks.ItemBlockBCore;
-import com.brandon3055.brandonscore.client.utils.CyclingItemGroup;
-import com.brandon3055.brandonscore.inventory.ContainerBCTile;
+import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.init.TechProperties;
-import com.brandon3055.draconicevolution.inventory.ContainerDETile;
 
 import net.foxmcloud.draconicadditions.DraconicAdditions;
 import net.foxmcloud.draconicadditions.blocks.machines.ChaosInfuser;
-import net.foxmcloud.draconicadditions.blocks.machines.ChaosLiquefier;
-import net.foxmcloud.draconicadditions.blocks.tileentity.*;
-import net.foxmcloud.draconicadditions.inventory.ContainerDATile;
-import net.foxmcloud.draconicadditions.inventory.GUILayoutFactories;
+import net.foxmcloud.draconicadditions.blocks.machines.ChaosLiquifier;
+import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosInfuser;
+import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosLiquifier;
+import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
+import net.foxmcloud.draconicadditions.inventory.ChaosLiquifierMenu;
 import net.foxmcloud.draconicadditions.items.Hermal;
-import net.foxmcloud.draconicadditions.items.armor.InfusedPotatoArmor;
 import net.foxmcloud.draconicadditions.items.curios.ModularHarness;
 import net.foxmcloud.draconicadditions.items.curios.ModularNecklace;
 import net.foxmcloud.draconicadditions.items.tools.ChaosContainer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = DraconicAdditions.MODID, bus = MOD)
-@ObjectHolder(DraconicAdditions.MODID)
 public class DAContent {
-	public static transient ArrayList<ResourceLocation> ITEM_REGISTRY_ORDER = new ArrayList<>();
+
+	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DraconicAdditions.MODID);
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DraconicAdditions.MODID);
+	public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DraconicAdditions.MODID);
+	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, DraconicAdditions.MODID);
+	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DraconicAdditions.MODID);
+	
+	public static final TechProperties hermalTier = (TechProperties) new TechProperties(TechLevel.CHAOTIC).rarity(Rarity.UNCOMMON).durability(-1).fireResistant()
+			.food(new FoodProperties.Builder().alwaysEat().nutrition(0).saturationMod(0).build());
+
+	public static void init() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		BLOCKS.register(eventBus);
+		ITEMS.register(eventBus);
+		TILES_ENTITIES.register(eventBus);
+		MENU_TYPES.register(eventBus);
+		ENTITY_TYPES.register(eventBus);
+	}
 
 	// Tile Entities
-	@ObjectHolder("chaos_liquefier")
-	public static BlockEntityType<TileChaosLiquefier> tileChaosLiquefier;
 	
-	@ObjectHolder("chaos_infuser")
-	public static BlockEntityType<TileChaosInfuser> tileChaosInfuser;
-
-
-	@SubscribeEvent
-	public static void registerBlockEntity(RegistryEvent.Register<BlockEntityType<?>> event) {
-		event.getRegistry().register(BlockEntityType.Builder.of(TileChaosLiquefier::new, chaosLiquefier).build(null).setRegistryName("chaos_liquefier"));
-		event.getRegistry().register(BlockEntityType.Builder.of(TileChaosInfuser::new, chaosInfuser).build(null).setRegistryName("chaos_infuser"));
-	}
-
-	@ObjectHolder("chaos_liquefier")
-	public static MenuType<ContainerDATile<TileChaosLiquefier>> containerChaosLiquefier;
+	public static final RegistryObject<ChaosLiquifier> chaosLiquifier = BLOCKS.register("chaos_liquifier", () -> new ChaosLiquifier(DEContent.HARDENED_MACHINE));
+	public static final RegistryObject<ChaosInfuser> chaosInfuser     = BLOCKS.register("chaos_infuser",   () -> new ChaosInfuser(DEContent.HARDENED_MACHINE));
 	
-	@ObjectHolder("chaos_infuser")
-	public static MenuType<ContainerDATile<TileChaosInfuser>> containerChaosInfuser;
+    public static final RegistryObject<ItemBlockBCore> itemChaosLiquifier = ITEMS.register("chaos_liquifier", () -> new ItemBlockBCore(chaosLiquifier.get(), new Item.Properties()));
+    public static final RegistryObject<ItemBlockBCore> itemChaosInfuser = ITEMS.register("chaos_infuser", () -> new ItemBlockBCore(chaosInfuser.get(), new Item.Properties()));
 
-	@SubscribeEvent
-	public static void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
-		event.getRegistry().register(IForgeMenuType.create((id, inv, data) -> new ContainerDATile<>(containerChaosLiquefier, id, inv, data, GUILayoutFactories.CHAOS_LIQUEFIER_LAYOUT)).setRegistryName("chaos_liquefier"));
-		event.getRegistry().register(IForgeMenuType.create((id, inv, data) -> new ContainerDATile<>(containerChaosInfuser, id, inv, data, GUILayoutFactories.CHAOS_INFUSER_LAYOUT)).setRegistryName("chaos_infuser"));
-	}
+	public static final RegistryObject<BlockEntityType<TileChaosLiquifier>> tileChaosLiquifier = TILES_ENTITIES.register("chaos_liquifier", () -> BlockEntityType.Builder.of(TileChaosLiquifier::new, chaosLiquifier.get()).build(null));
+	public static final RegistryObject<BlockEntityType<TileChaosInfuser>> tileChaosInfuser = TILES_ENTITIES.register("chaos_infuser", () -> BlockEntityType.Builder.of(TileChaosInfuser::new, chaosInfuser.get()).build(null));
 
-	@ObjectHolder("chaos_liquefier") public static ChaosLiquefier chaosLiquefier;
-	@ObjectHolder("chaos_infuser")   public static ChaosInfuser chaosInfuser;
-
-	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        Properties machine = Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(3.0F, 8F).noOcclusion().requiresCorrectToolForDrops();
-		event.getRegistry().register(new ChaosLiquefier(machine).setRegistryName("chaos_liquefier"));
-		event.getRegistry().register(new ChaosInfuser(machine).setRegistryName("chaos_infuser"));
-	}
+	public static final RegistryObject<MenuType<ChaosLiquifierMenu>> menuChaosLiquifier = MENU_TYPES.register("chaos_liquifier", () -> IForgeMenuType.create(ChaosLiquifierMenu::new));
+	public static final RegistryObject<MenuType<ChaosInfuserMenu>> menuChaosInfuser = MENU_TYPES.register("chaos_infuser", () -> IForgeMenuType.create(ChaosInfuserMenu::new));
 
 	// Crafting Components
 
-	@ObjectHolder("inert_potato_helm")  public static Item inertPotatoHelm;
-	@ObjectHolder("inert_potato_chest") public static Item inertPotatoChest;
-	@ObjectHolder("inert_potato_legs")  public static Item inertPotatoLegs;
-	@ObjectHolder("inert_potato_boots") public static Item inertPotatoBoots;
-	@ObjectHolder("chaos_heart")        public static Item chaosHeart;
-	@ObjectHolder("hermal")             public static Hermal hermal;
+	public static final RegistryObject<Item> inertPotatoHelm  = ITEMS.register("inert_potato_helm",  () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> inertPotatoChest = ITEMS.register("inert_potato_chest", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> inertPotatoLegs  = ITEMS.register("inert_potato_legs",  () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> inertPotatoBoots = ITEMS.register("inert_potato_boots", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> chaosHeart       = ITEMS.register("chaos_heart",        () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Hermal> hermal         = ITEMS.register("hermal",             () -> new Hermal(hermalTier));
 
 	// Armor
 
-	@ObjectHolder("infused_potato_helm")  public static InfusedPotatoArmor infusedPotatoHelm;
-	@ObjectHolder("infused_potato_chest") public static InfusedPotatoArmor infusedPotatoChest;
-	@ObjectHolder("infused_potato_legs")  public static InfusedPotatoArmor infusedPotatoLegs;
-	@ObjectHolder("infused_potato_boots") public static InfusedPotatoArmor infusedPotatoBoots;
+	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoHelm = ITEMS.register("infused_potato_helm",   () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.HELMET));
+	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoChest = ITEMS.register("infused_potato_chest", () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.CHESTPLATE));
+	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoLegs = ITEMS.register("infused_potato_legs",   () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.LEGGINGS));
+	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoBoots = ITEMS.register("infused_potato_boots", () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.BOOTS));
 
 	// Tools
 
-	@ObjectHolder("chaos_container") public static ChaosContainer chaosContainer;
+	public static final RegistryObject<ChaosContainer> chaosContainer = ITEMS.register("chaos_container",        () -> new ChaosContainer(DEContent.CHAOTIC_TOOLS));
 
 	// Curios
 
-	@ObjectHolder("wyvern_necklace")   public static ModularNecklace necklaceWyvern;
-	@ObjectHolder("draconic_necklace") public static ModularNecklace necklaceDraconic;
-	@ObjectHolder("chaotic_necklace")  public static ModularNecklace necklaceChaotic;
-	@ObjectHolder("wyvern_harness")    public static ModularHarness  harnessWyvern;
-	@ObjectHolder("draconic_harness")  public static ModularHarness  harnessDraconic;
-	@ObjectHolder("chaotic_harness")   public static ModularHarness  harnessChaotic;
+	public static final RegistryObject<ModularNecklace> necklaceWyvern   = ITEMS.register("wyvern_necklace",   () -> new ModularNecklace(DEContent.WYVERN_TOOLS));
+	public static final RegistryObject<ModularNecklace> necklaceDraconic = ITEMS.register("draconic_necklace", () -> new ModularNecklace(DEContent.DRACONIC_TOOLS));
+	public static final RegistryObject<ModularNecklace> necklaceChaotic  = ITEMS.register("chaotic_necklace",  () -> new ModularNecklace(DEContent.CHAOTIC_TOOLS));
+	public static final RegistryObject<ModularHarness>  harnessWyvern    = ITEMS.register("wyvern_harness",    () -> new ModularHarness(DEContent.WYVERN_TOOLS));
+	public static final RegistryObject<ModularHarness>  harnessDraconic  = ITEMS.register("draconic_harness",  () -> new ModularHarness(DEContent.DRACONIC_TOOLS));
+	public static final RegistryObject<ModularHarness>  harnessChaotic   = ITEMS.register("chaotic_harness",   () -> new ModularHarness(DEContent.CHAOTIC_TOOLS));
 
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		Supplier<Object[]> tabDA = () -> new Object[]{necklaceWyvern, chaosHeart, inertPotatoHelm};
-		CyclingItemGroup DAGroup = new CyclingItemGroup(DraconicAdditions.MODID + ".items", 40, tabDA, ITEM_REGISTRY_ORDER);
+// Blocks
 
-        TechProperties wyvernTier = (TechProperties) new TechProperties(TechLevel.WYVERN).tab(DAGroup).rarity(Rarity.UNCOMMON).durability(-1).fireResistant();
-        TechProperties draconicTier = (TechProperties) new TechProperties(TechLevel.DRACONIC).tab(DAGroup).rarity(Rarity.RARE).durability(-1).fireResistant();
-        TechProperties chaoticTier = (TechProperties) new TechProperties(TechLevel.CHAOTIC).tab(DAGroup).rarity(Rarity.EPIC).durability(-1).fireResistant();
-        TechProperties hermalTier = (TechProperties) new TechProperties(TechLevel.CHAOTIC).tab(DAGroup).rarity(Rarity.UNCOMMON).durability(-1).fireResistant()
-        	.food(new FoodProperties.Builder().alwaysEat().nutrition(0).saturationMod(0).build());
-
-		// Blocks
-
-		registerItem(event, new ItemBlockBCore(chaosLiquefier, new Item.Properties().tab(DAGroup)).setRegistryName(Objects.requireNonNull(chaosLiquefier.getRegistryName())));
-		registerItem(event, new ItemBlockBCore(chaosInfuser, new Item.Properties().tab(DAGroup)).setRegistryName(Objects.requireNonNull(chaosInfuser.getRegistryName())));
-
-		// Items
-
-		registerItem(event, new Item(new Item.Properties().tab(DAGroup)).setRegistryName("inert_potato_helm"));
-		registerItem(event, new Item(new Item.Properties().tab(DAGroup)).setRegistryName("inert_potato_chest"));
-		registerItem(event, new Item(new Item.Properties().tab(DAGroup)).setRegistryName("inert_potato_legs"));
-		registerItem(event, new Item(new Item.Properties().tab(DAGroup)).setRegistryName("inert_potato_boots"));
-		registerItem(event, new Item(new Item.Properties().tab(DAGroup)).setRegistryName("chaos_heart"));
-		//registerItem(event, new InfusedPotatoArmor(new Item.Properties().tab(DAGroup), EquipmentSlot.HEAD).setRegistryName("infused_potato_helm"));
-		//registerItem(event, new InfusedPotatoArmor(new Item.Properties().tab(DAGroup), EquipmentSlot.CHEST).setRegistryName("infused_potato_chest"));
-		//registerItem(event, new InfusedPotatoArmor(new Item.Properties().tab(DAGroup), EquipmentSlot.LEGS).setRegistryName("infused_potato_legs"));
-		//registerItem(event, new InfusedPotatoArmor(new Item.Properties().tab(DAGroup), EquipmentSlot.FEET).setRegistryName("infused_potato_boots"));
-		registerItem(event, new ChaosContainer(chaoticTier).setRegistryName("chaos_container"));
-		registerItem(event, new ModularNecklace(wyvernTier).setRegistryName("wyvern_necklace"));
-		registerItem(event, new ModularNecklace(draconicTier).setRegistryName("draconic_necklace"));
-		registerItem(event, new ModularNecklace(chaoticTier).setRegistryName("chaotic_necklace"));
-		registerItem(event, new ModularHarness(wyvernTier).setRegistryName("wyvern_harness"));
-		registerItem(event, new ModularHarness(draconicTier).setRegistryName("draconic_harness"));
-		registerItem(event, new ModularHarness(chaoticTier).setRegistryName("chaotic_harness"));
-		registerItem(event, new Hermal(hermalTier).setRegistryName("hermal"));
-	}
-
-	// Blocks
-
-	/*
+/*
 
 	@ModFeature(name = "armor_generator", tileEntity = TileArmorGenerator.class, itemBlock = ItemBlockBCore.class)
 	public static ArmorGenerator armorGenerator = new ArmorGenerator();
@@ -196,10 +141,5 @@ public class DAContent {
 
 	@ModFeature(name = "chaos_crystal_stable")
 	public static ChaosCrystalStable chaosCrystalStable = new ChaosCrystalStable();
-	 */
-
-	private static void registerItem(RegistryEvent.Register<Item> event, Item item) {
-		event.getRegistry().register(item);
-		ITEM_REGISTRY_ORDER.add(item.getRegistryName());
-	}
+ */
 }

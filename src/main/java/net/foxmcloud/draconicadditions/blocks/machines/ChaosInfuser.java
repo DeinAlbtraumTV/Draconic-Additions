@@ -19,7 +19,7 @@ public class ChaosInfuser extends EntityBlockBCore {
 	public ChaosInfuser(Properties properties) {
 		super(properties);
 		this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ACTIVE, false));
-		setBlockEntity(() -> DAContent.tileChaosInfuser, true);
+		setBlockEntity(() -> DAContent.tileChaosInfuser.get(), true);
 	}
 
 	@Override

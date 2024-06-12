@@ -1,16 +1,16 @@
 {
   "type": "draconicevolution:fusion_crafting",
-  "result": {
-    "item": "draconicadditions:chaos_infuser"
-  },
   "catalyst": {
     "item": "draconicevolution:energy_transfuser"
   },
-  "total_energy": 2000000,
-  "tier": "CHAOTIC",
   "ingredients": [
     {
       "item": "draconicadditions:chaos_container"
     }
-  ]
+  ],
+  "result": {
+    "item": "draconicadditions:chaos_infuser"
+  },
+  "tier": "CHAOTIC",
+  "total_energy": 2000000
 }

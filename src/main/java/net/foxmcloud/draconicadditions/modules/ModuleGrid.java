@@ -2,8 +2,12 @@ package net.foxmcloud.draconicadditions.modules;
 
 import com.brandon3055.draconicevolution.api.modules.Module;
 import com.brandon3055.draconicevolution.api.modules.items.ModuleItem;
-import com.brandon3055.draconicevolution.api.modules.lib.*;
+import com.brandon3055.draconicevolution.api.modules.lib.InstallResult;
+import com.brandon3055.draconicevolution.api.modules.lib.ModuleContext;
+import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
+import com.brandon3055.draconicevolution.api.modules.lib.ModuleHostContainer;
 import com.google.common.collect.ImmutableList;
+
 import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosHolderBase;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;

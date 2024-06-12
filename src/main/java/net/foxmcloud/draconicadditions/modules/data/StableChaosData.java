@@ -6,7 +6,6 @@ import com.brandon3055.draconicevolution.api.modules.data.ModuleData;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleContext;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class StableChaosData implements ModuleData<StableChaosData> {
 	private int maxInstability;
@@ -32,7 +31,7 @@ public class StableChaosData implements ModuleData<StableChaosData> {
 
 	@Override
 	public void addInformation(Map<Component, Component> map, ModuleContext context, boolean stack) { //TODO: Remove stack parameter.
-		map.put(new TranslatableComponent("module.draconicadditions.maxChaos.name"), new TranslatableComponent("module.draconicadditions.maxChaos.value", maxChaos));
-		map.put(new TranslatableComponent("module.draconicadditions.maxInstability.name"), new TranslatableComponent("module.draconicadditions.maxInstability.value", maxInstability));
+		map.put(Component.translatable("module.draconicadditions.maxChaos.name"), Component.translatable("module.draconicadditions.maxChaos.value", maxChaos));
+		map.put(Component.translatable("module.draconicadditions.maxInstability.name"), Component.translatable("module.draconicadditions.maxInstability.value", maxInstability));
 	}
 }

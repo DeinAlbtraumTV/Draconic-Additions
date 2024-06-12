@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.brandon3055.brandonscore.utils.EnergyUtils;
 import com.brandon3055.draconicevolution.api.capability.DECapabilities;
 import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.config.ConfigProperty;
@@ -22,28 +21,31 @@ import com.brandon3055.draconicevolution.integration.equipment.EquipmentManager;
 import com.brandon3055.draconicevolution.items.equipment.IModularItem;
 import com.brandon3055.draconicevolution.network.DraconicNetwork;
 
-import net.foxmcloud.draconicadditions.lib.DAModules;
+import net.foxmcloud.draconicadditions.lib.DADamage;
 import net.foxmcloud.draconicadditions.modules.ModuleTypes;
 import net.foxmcloud.draconicadditions.modules.data.ChaosInjectorData;
 import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> implements Comparable {
-	public static final DamageSource injectionDeath = new DamageSource("chaosInjection").bypassInvul().bypassArmor().bypassMagic();
 	private static final int maxChaos = 40;
 	private static final int hpDrainAmount = 1;
 	private static final double shieldDrainDivider = 2;
@@ -87,16 +89,16 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 			if (getRate() == 0 && isChaotic) {
 				rate.setValue(1);
 			}
-			boolean shouldTick = !entity.level.isClientSide && getRate() != 0 && (entity.tickCount % Math.max(20 / Math.abs(getRate()), 1) == 0);
+			boolean shouldTick = !entity.level().isClientSide && getRate() != 0 && (entity.tickCount % Math.max(20 / Math.abs(getRate()), 1) == 0);
 			if (getRate() > 0 && shouldTick) {
 				if (!isChaotic) {
 					if (entity.getHealth() < hpDrainAmount) {
-						if (!entity.level.isClientSide) {
+						if (!entity.level().isClientSide) {
 							if (modifyChaosInStorage(-1) == -1) {
 								modifyChaos(1);
 							}
 							else if (entity instanceof ServerPlayer player){
-								player.displayClientMessage(new TranslatableComponent("info.da.chaos_injector.storageEmpty").withStyle(ChatFormatting.YELLOW), true);
+								player.displayClientMessage(Component.translatable("info.da.chaos_injector.storageEmpty").withStyle(ChatFormatting.YELLOW), true);
 							}
 						}
 					}
@@ -104,7 +106,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 						drainBlood(entity, hpDrainAmount);
 					}
 				}
-				else if (isChaotic && !entity.level.isClientSide) {
+				else if (isChaotic && !entity.level().isClientSide) {
 					modifyChaos(1);
 				}
 			}
@@ -112,16 +114,16 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 				if (!isChaotic && storedHP > 0) {
 					drainBlood(entity, -hpDrainAmount);
 				}
-				else if (isChaotic && !entity.level.isClientSide) {
+				else if (isChaotic && !entity.level().isClientSide) {
 					if (modifyChaosInStorage(1) == 1) {
 						modifyChaos(-1);
 					}
 					else if (entity instanceof ServerPlayer player) {
 						StableChaosData allData = host.getModuleData(ModuleTypes.STABLE_CHAOS);
-						player.displayClientMessage(allData != null && allData.getMaxChaos() > 0 ? new TranslatableComponent("info.da.chaos_injector.storageFull").withStyle(ChatFormatting.RED) : new TranslatableComponent("info.da.chaos_injector.noStorage").withStyle(ChatFormatting.RED), true);
+						player.displayClientMessage(allData != null && allData.getMaxChaos() > 0 ? Component.translatable("info.da.chaos_injector.storageFull").withStyle(ChatFormatting.RED) : Component.translatable("info.da.chaos_injector.noStorage").withStyle(ChatFormatting.RED), true);
 					}
 					else if (entity instanceof Player player) {
-						player.level.playSound(player, new BlockPos(player.getX(), player.getY(), player.getZ()), DESounds.beam, SoundSource.MASTER, 1.0F, 2.0F);
+						player.level().playSound(player, player.blockPosition(), DESounds.BEAM.get(), SoundSource.MASTER, 1.0F, 2.0F);
 					}
 					if (chaos == 0) {
 						entity.setHealth(1);
@@ -142,16 +144,16 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 						int cooldownAmount = Math.max((int)Math.round(factor * 40), 2);
 						float pitch = 1.5F + ((float)(1 - factor) * 0.5F);
 						prevWarningCountdown = cooldownAmount;
-						if (player.level.isClientSide) {
-							player.level.playSound(player, new BlockPos(player.getX(), player.getY(), player.getZ()), DESounds.beam, SoundSource.MASTER, 1.0F, pitch);
+						if (player.level().isClientSide) {
+							player.level().playSound(player, player.blockPosition(), DESounds.BEAM.get(), SoundSource.MASTER, 1.0F, pitch);
 						}
 						else {
-							((ServerPlayer)player).displayClientMessage(new TranslatableComponent("info.da.chaos_injector.shieldLow").withStyle(ChatFormatting.RED), true);
+							((ServerPlayer)player).displayClientMessage(Component.translatable("info.da.chaos_injector.shieldLow").withStyle(ChatFormatting.RED), true);
 						}
 						warningCountdown = cooldownAmount;
 					}
 				}
-				if (entity.level.isClientSide) {
+				if (entity.level().isClientSide) {
 					entity.addEffect(new MobEffectInstance(MobEffects.WITHER, 2, 1, false, false, false));
 					entity.setHealth(chaos / (maxChaos / 20F));
 				}
@@ -171,8 +173,8 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 					}
 					else shouldDie = true;
 					if (shouldDie) {
-						entity.getCombatTracker().recordDamage(injectionDeath, prevHP, Float.MAX_VALUE / 5F);
-						DraconicNetwork.sendExplosionEffect(((ServerLevel)entity.level).dimension(), entity.blockPosition(), Math.min(10, chaos * 4), false);
+						entity.getCombatTracker().recordDamage(DADamage.injectionDeath(entity.level()), Float.MAX_VALUE / 5F);
+						DraconicNetwork.sendExplosionEffect(((ServerLevel)entity.level()).dimension(), entity.blockPosition(), Math.min(10, chaos * 4), false);
 						chaos = 0;
 						isChaotic = false;
 						rate.setValue(-1);
@@ -182,7 +184,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 						int timesToKillEntity = 100;
 						while (!hasActuallyDied && timesToKillEntity-- >= 0) {
 							entity.setHealth(0);
-							entity.die(injectionDeath);
+							entity.die(DADamage.injectionDeath(entity.level()));
 							hasActuallyDied = entity.isDeadOrDying();
 						}
 					}
@@ -192,7 +194,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 				if (getRate() <= 0) {
 					prevHP = entity.getHealth();
 				}
-				if (getRate() < 0 && entity.getHealth() <= 1 && entity.level.isClientSide) {
+				if (getRate() < 0 && entity.getHealth() <= 1 && entity.level().isClientSide) {
 					entity.removeEffectNoUpdate(MobEffects.WITHER);
 				}
 				if (getRate() > 0) {
@@ -202,26 +204,26 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 						float pitch = 1.5F + ((float)(1 - prevHP / entity.getMaxHealth()) * 0.5F);
 						prevWarningCountdown = cooldownAmount;
 						if (shield == null) {
-							if (player.level.isClientSide) {
-								player.level.playSound(player, new BlockPos(player.getX(), player.getY(), player.getZ()), DESounds.beam, SoundSource.MASTER, 1.0F, pitch);
+							if (player.level().isClientSide) {
+								player.level().playSound(player, player.blockPosition(), DESounds.BEAM.get(), SoundSource.MASTER, 1.0F, pitch);
 							}
 							else {
-								((ServerPlayer)player).displayClientMessage(new TranslatableComponent("info.da.chaos_injector.noShield").withStyle(ChatFormatting.RED), true);
+								((ServerPlayer)player).displayClientMessage(Component.translatable("info.da.chaos_injector.noShield").withStyle(ChatFormatting.RED), true);
 							}
 							warningCountdown = cooldownAmount;
 						}
 						else if (!shield.isShieldEnabled()) {
-							if (player.level.isClientSide) {
-								player.level.playSound(player, new BlockPos(player.getX(), player.getY(), player.getZ()), DESounds.beam, SoundSource.MASTER, 1.0F, pitch);
+							if (player.level().isClientSide) {
+								player.level().playSound(player, player.blockPosition(), DESounds.BEAM.get(), SoundSource.MASTER, 1.0F, pitch);
 							}
 							else {
-								((ServerPlayer)player).displayClientMessage(new TranslatableComponent("info.da.chaos_injector.shieldDisabled").withStyle(ChatFormatting.RED), true);
+								((ServerPlayer)player).displayClientMessage(Component.translatable("info.da.chaos_injector.shieldDisabled").withStyle(ChatFormatting.RED), true);
 							}
 							warningCountdown = cooldownAmount;
 						}
 						else if (shieldCooldownWhenInjecting && shield.getShieldPoints() < 1500 / shieldDrainDivider) {
-							if (!player.level.isClientSide) {
-								((ServerPlayer)player).displayClientMessage(new TranslatableComponent("info.da.chaos_injector.shieldCapacityLow").withStyle(ChatFormatting.YELLOW), true);
+							if (!player.level().isClientSide) {
+								((ServerPlayer)player).displayClientMessage(Component.translatable("info.da.chaos_injector.shieldCapacityLow").withStyle(ChatFormatting.YELLOW), true);
 							}
 							warningCountdown = 20;
 							prevWarningCountdown = warningCountdown; 
@@ -230,7 +232,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 				}
 			}
 			if (entity instanceof ServerPlayer player && warningCountdown == prevWarningCountdown / 2) {
-				player.displayClientMessage(new TranslatableComponent(""), true);
+				player.displayClientMessage(Component.translatable(""), true);
 			}
 			prevRate = rate.getValue();
 		}
@@ -359,7 +361,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
     public boolean moduleClicked(Player player, double x, double y, int button, ClickType clickType) {
 		boolean cantInteract = isChaotic || getRate() > 0;
 		if (cantInteract && player instanceof ServerPlayer sPlayer) {
-			sPlayer.displayClientMessage(new TranslatableComponent("info.da.chaos.cantmove", new TranslatableComponent("item.draconicadditions.chaos_injector_module").getString()).withStyle(ChatFormatting.RED), true);
+			sPlayer.displayClientMessage(Component.translatable("info.da.chaos.cantmove", Component.translatable("item.draconicadditions.chaos_injector_module").getString()).withStyle(ChatFormatting.RED), true);
 		}
 		return cantInteract;
     }

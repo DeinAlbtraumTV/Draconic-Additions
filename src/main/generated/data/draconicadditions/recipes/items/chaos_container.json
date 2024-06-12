@@ -1,13 +1,8 @@
 {
   "type": "draconicevolution:fusion_crafting",
-  "result": {
-    "item": "draconicadditions:chaos_container"
-  },
   "catalyst": {
     "item": "minecraft:bucket"
   },
-  "total_energy": 250000,
-  "tier": "DRACONIC",
   "ingredients": [
     {
       "item": "draconicevolution:infused_obsidian"
@@ -21,5 +16,10 @@
     {
       "item": "draconicevolution:dislocator"
     }
-  ]
+  ],
+  "result": {
+    "item": "draconicadditions:chaos_container"
+  },
+  "tier": "DRACONIC",
+  "total_energy": 250000
 }

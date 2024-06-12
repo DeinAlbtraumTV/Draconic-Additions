@@ -11,39 +11,40 @@ import net.foxmcloud.draconicadditions.lib.DAContent;
 import net.foxmcloud.draconicadditions.lib.DAModules;
 import net.foxmcloud.draconicadditions.modules.ModuleTypes;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class LangGenerator extends LanguageProvider {
-	public LangGenerator(DataGenerator gen) {
+	public LangGenerator(PackOutput gen) {
 		super(gen, DraconicAdditions.MODID, "en_us");
 	}
 
 	private void blocks(PrefixHelper helper) {
-		helper.add(DAContent.chaosLiquefier, "Chaos Liquefier");
-		helper.add(DAContent.chaosInfuser, "Chaos Infuser");
+		helper.add(DAContent.chaosLiquifier.get(), "Chaos Liquifier");
+		helper.add(DAContent.chaosInfuser.get(), "Chaos Infuser");
 	}
 
 	private void items(PrefixHelper helper) {
 		helper.setPrefix("item." + DraconicAdditions.MODID);
-		helper.add(DAContent.chaosHeart,         "Chaos Heart");
-		helper.add(DAContent.inertPotatoHelm,    "Inert Potato Helmet");
-		helper.add(DAContent.inertPotatoChest,   "Inert Potato Chestplate");
-		helper.add(DAContent.inertPotatoLegs,    "Inert Potato Leggings");
-		helper.add(DAContent.inertPotatoBoots,   "Inert Potato Boots");
-		helper.add(DAContent.infusedPotatoHelm,  "Infused Potato Helmet");
-		helper.add(DAContent.infusedPotatoChest, "Infused Potato Chestplate");
-		helper.add(DAContent.infusedPotatoLegs,  "Infused Potato Leggings");
-		helper.add(DAContent.infusedPotatoBoots, "Infused Potato Boots");
-		helper.add(DAContent.chaosContainer,     "Chaos Container");
-		helper.add(DAContent.necklaceWyvern,     "Wyvern Necklace");
-		helper.add(DAContent.necklaceDraconic,   "Draconic Necklace");
-		helper.add(DAContent.necklaceChaotic,    "Chaotic Necklace");
-		helper.add(DAContent.harnessWyvern,      "Wyvern Harness");
-		helper.add(DAContent.harnessDraconic,    "Draconic Harness");
-		helper.add(DAContent.harnessChaotic,     "Chaotic Harness");
-		helper.add(DAContent.hermal,             "hermal");
+		helper.add(DAContent.chaosHeart.get(),         "Chaos Heart");
+		helper.add(DAContent.inertPotatoHelm.get(),    "Inert Potato Helmet");
+		helper.add(DAContent.inertPotatoChest.get(),   "Inert Potato Chestplate");
+		helper.add(DAContent.inertPotatoLegs.get(),    "Inert Potato Leggings");
+		helper.add(DAContent.inertPotatoBoots.get(),   "Inert Potato Boots");
+		//helper.add(DAContent.infusedPotatoHelm.get(),  "Infused Potato Helmet");
+		//helper.add(DAContent.infusedPotatoChest.get(), "Infused Potato Chestplate");
+		//helper.add(DAContent.infusedPotatoLegs.get(),  "Infused Potato Leggings");
+		//helper.add(DAContent.infusedPotatoBoots.get(), "Infused Potato Boots");
+		helper.add(DAContent.chaosContainer.get(),     "Chaos Container");
+		helper.add(DAContent.necklaceWyvern.get(),     "Wyvern Necklace");
+		helper.add(DAContent.necklaceDraconic.get(),   "Draconic Necklace");
+		helper.add(DAContent.necklaceChaotic.get(),    "Chaotic Necklace");
+		helper.add(DAContent.harnessWyvern.get(),      "Wyvern Harness");
+		helper.add(DAContent.harnessDraconic.get(),    "Draconic Harness");
+		helper.add(DAContent.harnessChaotic.get(),     "Chaotic Harness");
+		helper.add(DAContent.hermal.get(),             "hermal");
 		helper.add("hermal.desc",                "hermal?");
 	}
 
@@ -55,24 +56,24 @@ public class LangGenerator extends LanguageProvider {
 
 	private void modules(PrefixHelper helper) {
 		helper.setPrefix("module." + DraconicAdditions.MODID);
-		helper.add(DAModules.chaoticAutoFeed,   "Chaotic Auto Feed Module");
-		helper.add(ModuleTypes.TICK_ACCEL,      "Tick Accelerator");
-		helper.add(DAModules.draconicTickAccel, "Draconic Tick Accelerator");
-		helper.add(DAModules.chaoticTickAccel,  "Chaotic Tick Accelerator");
-		helper.add("tick_accel.name",           "Additional Ticks");
-		helper.add("tick_accel.value",          "%s Ticks");
-		helper.add(ModuleTypes.STABLE_CHAOS,    "Chaos Stabilizer");
-		helper.add(DAModules.semiStableChaos,   "Semi-Stable Chaos Holder");
-		helper.add(DAModules.stableChaos,       "Stable Chaos Holder");
-		helper.add(DAModules.unstableChaos,     "Unstable Chaos Holder");
-		helper.add("maxChaos.name",             "Max Chaos Stored");
-		helper.add("maxChaos.value",            "%s mB");
-		helper.add("maxInstability.name",       "Instability");
-		helper.add("maxInstability.value",      "%s%%");
-		helper.add(ModuleTypes.CHAOS_INJECTOR,  "Chaos Injection System");
-		helper.add(DAModules.chaosInjector,     "Chaos Injector");
-		helper.add("chaos_injector.name",       "Rate of Injection");
-		helper.add("chaos_injector.value",      "%s Hearts");
+		helper.add(DAModules.chaoticAutoFeed.get(),   "Chaotic Auto Feed Module");
+		helper.add(ModuleTypes.TICK_ACCEL,            "Tick Accelerator");
+		helper.add(DAModules.draconicTickAccel.get(), "Draconic Tick Accelerator");
+		helper.add(DAModules.chaoticTickAccel.get(),  "Chaotic Tick Accelerator");
+		helper.add("tick_accel.name",                 "Additional Ticks");
+		helper.add("tick_accel.value",                "%s Ticks");
+		helper.add(ModuleTypes.STABLE_CHAOS,          "Chaos Stabilizer");
+		helper.add(DAModules.semiStableChaos.get(),   "Semi-Stable Chaos Holder");
+		helper.add(DAModules.stableChaos.get(),       "Stable Chaos Holder");
+		helper.add(DAModules.unstableChaos.get(),     "Unstable Chaos Holder");
+		helper.add("maxChaos.name",                   "Max Chaos Stored");
+		helper.add("maxChaos.value",                  "%s mB");
+		helper.add("maxInstability.name",             "Instability");
+		helper.add("maxInstability.value",            "%s%%");
+		helper.add(ModuleTypes.CHAOS_INJECTOR,        "Chaos Injection System");
+		helper.add(DAModules.chaosInjector.get(),     "Chaos Injector");
+		helper.add("chaos_injector.name",             "Rate of Injection");
+		helper.add("chaos_injector.value",            "%s Hearts");
 	}
 
 	private void gui(PrefixHelper helper) {

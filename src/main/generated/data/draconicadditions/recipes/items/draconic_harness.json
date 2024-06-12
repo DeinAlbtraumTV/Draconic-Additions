@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "AAA",
-    "AHA",
-    "ASA"
-  ],
   "key": {
     "A": {
       "tag": "forge:ingots/draconium_awakened"
@@ -13,9 +8,14 @@
       "item": "draconicadditions:wyvern_harness"
     },
     "S": {
-      "item": "draconicevolution:draconic_shield_control_module"
+      "item": "draconicevolution:item_draconic_shield_control"
     }
   },
+  "pattern": [
+    "AAA",
+    "AHA",
+    "ASA"
+  ],
   "result": {
     "item": "draconicadditions:draconic_harness"
   }

@@ -7,8 +7,8 @@ import com.brandon3055.draconicevolution.api.capability.DECapabilities;
 import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.event.ModularItemInitEvent;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleHostImpl;
-import com.brandon3055.draconicevolution.client.gui.modular.GuiModularItem;
-import com.brandon3055.draconicevolution.client.gui.modular.itemconfig.GuiConfigurableItem;
+import com.brandon3055.draconicevolution.client.gui.modular.ModularItemGui;
+import com.brandon3055.draconicevolution.client.gui.modular.itemconfig.ConfigurableItemGui;
 import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.items.equipment.IModularArmor;
 
@@ -26,7 +26,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -38,9 +38,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -57,11 +57,11 @@ public class DAEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		if (world.isClientSide) {
 			return;
 		}
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		boolean handsAreEmpty = player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty();
 		if (!handsAreEmpty || !player.isShiftKeyDown() || !event.getPos().closerToCenterThan(player.position(), 2)) {
 			return;
@@ -90,13 +90,13 @@ public class DAEventHandler {
 			Vec2 pRot = player.getRotationVector();
 			Vec2 rotation = new Vec2(-pRot.x, pRot.y + 180);
 			if (BlockStorage.restoreBlockFromTag(world, abovePos, rotation, harness.getTag(), true, true)) {
-				player.displayClientMessage(new TranslatableComponent("info.da.modular_harness.placeSuccess"), true);
+				player.displayClientMessage(Component.translatable("info.da.modular_harness.placeSuccess"), true);
 				event.setCanceled(true);
 			}
 		}
 		else if (world.getBlockState(event.getPos()).hasBlockEntity()) {
 			if (ModularHarness.storeBlockEntity(world, event.getPos(), harness, player, true)) {
-				player.displayClientMessage(new TranslatableComponent("info.da.modular_harness.storeSuccess"), true);
+				player.displayClientMessage(Component.translatable("info.da.modular_harness.storeSuccess"), true);
 			}
 			event.setCanceled(true);
 		}
@@ -104,7 +104,7 @@ public class DAEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public boolean chaosInjectionDeath(LivingDeathEvent event) {
-		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntityLiving());
+		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntity());
 		if (injector != null && injector.isChaosInBlood()) {
 			event.setCanceled(true);
 			return true;
@@ -114,7 +114,7 @@ public class DAEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public boolean blockHealingWhenInjecting(LivingHealEvent event) {
-		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntityLiving());
+		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntity());
 		if (injector != null && (injector.getRate() > 0 || injector.isChaosInBlood())) {
 			event.setCanceled(true);
 			return true;
@@ -124,7 +124,7 @@ public class DAEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public boolean blockShieldDamageWhenInjecting(LivingAttackEvent event) {
-		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntityLiving());
+		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntity());
 		if (injector != null && injector.isChaosInBlood()) {
 			event.setCanceled(true);
 			return true;
@@ -134,7 +134,7 @@ public class DAEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public boolean blockShieldDamageWhenInjecting(LivingDamageEvent event) {
-		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntityLiving());
+		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(event.getEntity());
 		if (injector != null && injector.isChaosInBlood()) {
 			event.setCanceled(true);
 			return true;
@@ -144,7 +144,7 @@ public class DAEventHandler {
 	
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void blockChaosItemMoving(MouseClickedEvent event) {
+	public void blockChaosItemMoving(ScreenEvent.MouseButtonPressed.Pre event) {
 		if (!(event.getScreen() instanceof AbstractContainerScreen)) {
 			return;
 		}
@@ -157,16 +157,16 @@ public class DAEventHandler {
 		if (stack == null) {
 			return;
 		}
-		if ((inventory instanceof GuiModularItem || inventory instanceof GuiConfigurableItem) && event.getButton() != 1) {
+		if ((inventory instanceof ModularItemGui.Screen || inventory instanceof ConfigurableItemGui.Screen) && event.getButton() != 1) {
 			return;
 		}
 		Minecraft mc = inventory.getMinecraft();
 		LocalPlayer player = mc.player;
 		if (stack.getItem() instanceof ChaosContainer && !player.isCreative() && ((ChaosContainer) stack.getItem()).getChaos(stack) > 0) {
-			player.displayClientMessage(new TranslatableComponent("info.da.chaos.cantmove", stack.getHoverName()), true);
+			player.displayClientMessage(Component.translatable("info.da.chaos.cantmove", stack.getHoverName()), true);
 			event.setCanceled(true);
 		}
-		else if (stack.getItem() instanceof IModularArmor armor && !player.isCreative()) {
+		else if (stack.getItem() instanceof IModularArmor && !player.isCreative()) {
 			LazyOptional<ModuleHost> cap = stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY);
 			if (!cap.isPresent()) {
 				return;
@@ -177,7 +177,7 @@ public class DAEventHandler {
 				return;
 			}
 			if (entities.get(0) != null && (entities.get(0).isChaosInBlood() || entities.get(0).getRate() > 0)) {
-				player.displayClientMessage(new TranslatableComponent("info.da.chaos.cantmove", stack.getHoverName()), true);
+				player.displayClientMessage(Component.translatable("info.da.chaos.cantmove", stack.getHoverName()), true);
 				event.setCanceled(true);
 			}
 		}
@@ -186,13 +186,13 @@ public class DAEventHandler {
 	@SubscribeEvent
 	public void addCategoriesToContainers(ModularItemInitEvent e) {
 		ArrayList<Item> validChaosContainers = new ArrayList<Item>(Arrays.asList(
-			DEContent.axe_chaotic,
-			DEContent.bow_chaotic,
-			DEContent.chestpiece_chaotic,
-			DEContent.pickaxe_chaotic,
-			DEContent.shovel_chaotic,
-			DEContent.staff_chaotic,
-			DEContent.sword_chaotic
+			DEContent.AXE_CHAOTIC.get(),
+			DEContent.BOW_CHAOTIC.get(),
+			DEContent.CHESTPIECE_CHAOTIC.get(),
+			DEContent.PICKAXE_CHAOTIC.get(),
+			DEContent.SHOVEL_CHAOTIC.get(),
+			DEContent.STAFF_CHAOTIC.get(),
+			DEContent.SWORD_CHAOTIC.get()
 		));
 		ItemStack stack = e.getStack();
 		if (validChaosContainers.contains(stack.getItem())) {
@@ -202,18 +202,18 @@ public class DAEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void onEntitySpawn(EntityJoinWorldEvent e) {
+	public void onEntitySpawn(EntityJoinLevelEvent e) {
 		if (!(e.getEntity() instanceof ItemEntity)) {
 			return;
 		}
 		ItemEntity entity = (ItemEntity)e.getEntity();
 		ItemStack stack = entity.getItem();
-		if (stack.getItem() != DEContent.dragon_heart) {
+		if (stack.getItem() != DEContent.DRAGON_HEART.get()) {
 			return;
 		}
 		CompoundTag nbt = entity.getPersistentData();
 		if (nbt != null && nbt.contains("guardian_heart") && nbt.getBoolean("guardian_heart")) {
-			entity.setItem(new ItemStack(DAContent.chaosHeart));
+			entity.setItem(DAContent.chaosHeart.get().getDefaultInstance());
 		}
 	}
 }

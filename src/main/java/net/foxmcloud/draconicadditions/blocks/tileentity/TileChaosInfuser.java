@@ -10,6 +10,7 @@ import com.brandon3055.brandonscore.lib.IInteractTile;
 import com.brandon3055.brandonscore.lib.IRSSwitchable;
 import com.brandon3055.brandonscore.lib.datamanager.DataFlags;
 import com.brandon3055.brandonscore.lib.datamanager.ManagedBool;
+import com.brandon3055.brandonscore.utils.EnergyUtils;
 import com.brandon3055.draconicevolution.api.capability.DECapabilities;
 import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.modules.lib.ModularOPStorage;
@@ -17,8 +18,7 @@ import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
 import com.brandon3055.draconicevolution.handlers.DESounds;
 import com.brandon3055.draconicevolution.init.DEContent;
 
-import net.foxmcloud.draconicadditions.inventory.ContainerDATile;
-import net.foxmcloud.draconicadditions.inventory.GUILayoutFactories;
+import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.foxmcloud.draconicadditions.lib.DAContent;
 import net.foxmcloud.draconicadditions.modules.ModuleTypes;
 import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
@@ -34,23 +34,23 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkHooks;
 
-public class TileChaosInfuser extends TileChaosHolderBase implements IChangeListener, IRSSwitchable, IInteractTile, MenuProvider {
+public class TileChaosInfuser extends TileChaosHolderBase implements IChangeListener, IInteractTile, MenuProvider {
 
 	private int chargeRate = 1000000;
 	private int rateMultiplier = 2;
 	public int maxCharge = 200;
 
 	public final ManagedBool active = register(new ManagedBool("active", false, DataFlags.SAVE_BOTH_SYNC_TILE, DataFlags.TRIGGER_UPDATE));
-	
+
 	public TileChaosInfuser(BlockPos pos, BlockState state) {
-		super(DAContent.tileChaosInfuser, pos, state);
-		itemHandler = new TileItemStackHandler(2);
+		super(DAContent.tileChaosInfuser.get(), pos, state);
+		itemHandler = new TileItemStackHandler(this, 2);
 		opStorage = new ModularOPStorage(this, 2000000000, 20000000, 20000000);
 		capManager.setManaged("energy", CapabilityOP.OP, opStorage).saveBoth().syncContainer();
-		capManager.setManaged("inventory", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, itemHandler).saveBoth().syncTile();
+		capManager.setInternalManaged("inventory", ForgeCapabilities.ITEM_HANDLER, itemHandler).saveBoth().syncTile();
 		itemHandler.setStackValidator(this::isItemValidForSlot);
 		setupPowerSlot(itemHandler, 1, opStorage, false);
 		installIOTracker(opStorage);
@@ -62,7 +62,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 		if (level.isClientSide()) {
 			if (active.get()) {
 				float beamPitch = (float)(0.5F + (Math.random() * 0.1F));
-				level.playLocalSound(worldPosition.getX() + 0.5D, worldPosition.getY(), worldPosition.getZ() + 0.5D, DESounds.beam, SoundSource.BLOCKS, 0.2F, beamPitch, false);
+				level.playLocalSound(worldPosition.getX() + 0.5D, worldPosition.getY(), worldPosition.getZ() + 0.5D, DESounds.BEAM.get(), SoundSource.BLOCKS, 0.2F, beamPitch, false);
 			}
 		}
 		else {
@@ -75,7 +75,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 					if (chaos.get() >= 20000 * stack.getCount() && opStorage.extractOP(opToTake, true) >= opToTake) {
 						chaos.subtract(20000 * stack.getCount());
 						opStorage.extractOP(opToTake, false);
-						ItemStack heart = DAContent.chaosHeart.getDefaultInstance();
+						ItemStack heart = DAContent.chaosHeart.get().getDefaultInstance();
 						heart.setCount(stack.getCount());
 						itemHandler.setStackInSlot(0, heart);
 					}
@@ -111,26 +111,28 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 	}
 
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		ModuleHost host = stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY).orElse(null);
-		if (host != null) {
-			StableChaosData data = host.getModuleData(ModuleTypes.STABLE_CHAOS);
-			return data != null ? data.getMaxChaos() > 0 : false;
+		if (index == 1) {
+			return EnergyUtils.isEnergyItem(stack);
 		}
-		else if (stack.getItem() == DEContent.dragon_heart) {
-			return true;
+		else {
+			ModuleHost host = stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY).orElse(null);
+			if (host != null) {
+				StableChaosData data = host.getModuleData(ModuleTypes.STABLE_CHAOS);
+				return data != null ? data.getMaxChaos() > 0 : false;
+			}
+			else return stack.getItem() == DEContent.DRAGON_HEART.get();
 		}
-		return false;
 	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int currentWindowIndex, Inventory playerInventory, Player player) {
-		return new ContainerDATile<>(DAContent.containerChaosInfuser, currentWindowIndex, player.getInventory(), this, GUILayoutFactories.CHAOS_INFUSER_LAYOUT);
+		return new ChaosInfuserMenu(currentWindowIndex, player.getInventory(), this);
 	}
 
 	@Override
 	public boolean onBlockActivated(BlockState state, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if (player instanceof ServerPlayer) {
-			NetworkHooks.openGui((ServerPlayer) player, this, worldPosition);
+			NetworkHooks.openScreen((ServerPlayer) player, this, worldPosition);
 		}
 		return true;
 	}

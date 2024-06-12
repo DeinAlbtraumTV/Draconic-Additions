@@ -1,5 +1,6 @@
 package net.foxmcloud.draconicadditions.items.tools;
 
+import java.awt.TextComponent;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.brandon3055.draconicevolution.api.modules.data.ShieldData;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleHostImpl;
 import com.brandon3055.draconicevolution.client.keybinding.KeyBindings;
 import com.brandon3055.draconicevolution.handlers.DESounds;
+import com.brandon3055.draconicevolution.init.DEDamage;
 import com.brandon3055.draconicevolution.init.EquipCfg;
 import com.brandon3055.draconicevolution.init.TechProperties;
 
@@ -30,8 +32,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -75,8 +75,8 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 			if (extractEnergy(player, stack, RFToDrain) < RFToDrain) {
 				Vector3 pos = new Vector3(player.getX(), player.getY(), player.getZ());
 				CommonMethods.explodeEntity(pos, world);
-				player.hurt(CommonMethods.chaosBurst, getChaos(stack));
-				player.displayClientMessage(new TranslatableComponent("info.da.chaos.explode"), true);
+				player.hurt(DEDamage.chaosImplosion(world), getChaos(stack));
+				player.displayClientMessage(Component.translatable("info.da.chaos.explode"), true);
 				stack.shrink(1);
 			}
 			else if (shouldAlarm(stack) && hasShielding(stack)) {
@@ -84,10 +84,10 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 					resetCountdown(stack);
 				}
 				if (advanceCountdown(stack)) {
-					player.displayClientMessage(new TranslatableComponent("info.da.chaos.warning", getName(stack)).withStyle(ChatFormatting.RED), true);
+					player.displayClientMessage(Component.translatable("info.da.chaos.warning", getName(stack)).withStyle(ChatFormatting.RED), true);
 				}
 				else if (getCurrentCountdown(stack) == getCountdownAmount(stack) / 2) {
-					player.displayClientMessage(new TextComponent(""), true);
+					player.displayClientMessage(Component.literal(""), true);
 				}
 			}
 		}
@@ -98,19 +98,19 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 	public void handleTick(ItemStack stack, LivingEntity entity, @Nullable EquipmentSlot slot, boolean inEquipModSlot) {
 		if (!(entity instanceof Player)) return;
 		Player player = (Player) entity;
-		if (player.level.isClientSide && shouldAlarm(stack) && hasShielding(stack) && !player.isCreative() && !player.isSpectator()) {
+		if (player.level().isClientSide && shouldAlarm(stack) && hasShielding(stack) && !player.isCreative() && !player.isSpectator()) {
 			if (getCurrentCountdown(stack) <= 0) {
 				float pitch = 1.5F + ((float)(1 - (double)EnergyUtils.getEnergyStored(stack) / EnergyUtils.getMaxEnergyStored(stack)) * 0.5F);
-				player.level.playSound(player, new BlockPos(player.getX(), player.getY(), player.getZ()), DESounds.beam, SoundSource.MASTER, 1.0F, pitch);
+				player.level().playSound(player, player.blockPosition(), DESounds.BEAM.get(), SoundSource.MASTER, 1.0F, pitch);
 			}
 		}
-		upkeep(player, stack, player.level);
+		upkeep(player, stack, player.level());
 	}
 
 	@Override
 	public boolean onDroppedByPlayer(ItemStack stack, Player player) {
 		if (getChaos(stack) > 0 && !player.isCreative()) {
-			player.displayClientMessage(new TranslatableComponent("info.da.chaos.cantdrop", stack.getHoverName()), true);
+			player.displayClientMessage(Component.translatable("info.da.chaos.cantdrop", stack.getHoverName()), true);
 			return false;
 		}
 		else {
@@ -123,12 +123,12 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 	public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
 		if (entity instanceof LivingEntity) {
 			LivingEntity ent = (LivingEntity) entity;
-			if (getChaos(stack) > 0 && !ent.isInvulnerableTo(CommonMethods.chaosBurst)) {
+			if (getChaos(stack) > 0 && !ent.isInvulnerableTo(DEDamage.chaosImplosion(entity.level()))) {
 				Vector3 pos = new Vector3(ent.getX(), ent.getY(), ent.getZ());
-				CommonMethods.explodeEntity(pos, player.level);
-				if (!player.level.isClientSide) {
+				CommonMethods.explodeEntity(pos, player.level());
+				if (!player.level().isClientSide) {
 					float damage = Math.min(getChaos(stack), ent.getHealth());
-					entity.hurt(CommonMethods.chaosBurst, damage);
+					entity.hurt(DEDamage.chaosImplosion(player.level()), damage);
 					removeChaos(stack, (int) Math.floor(damage));
 				}
 				return true;
@@ -148,13 +148,13 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 			if (((ChaosContainer) stack.getItem()).getChaos(stack) > 0 && tileEntity.chaos.get() != tileEntity.getMaxChaos()) {
 				int chaosToRemove = Math.min(tileEntity.getMaxChaos() - tileEntity.chaos.get(), getChaos(stack));
 				int removed = removeChaos(stack, chaosToRemove);
-				player.displayClientMessage(new TranslatableComponent("info.da.chaos.xfer.to", removed, tileEntity.getName()), true);
+				player.displayClientMessage(Component.translatable("info.da.chaos.xfer.to", removed, tileEntity.getName()), true);
 				tileEntity.chaos.add(removed);
 			}
 			else {
 				int chaosToAdd = Math.min(getMaxChaos(stack) - getChaos(stack), tileEntity.chaos.get());
 				int added = chaosToAdd - addChaos(stack, chaosToAdd);
-				player.displayClientMessage(new TranslatableComponent("info.da.chaos.xfer.from", added, tileEntity.getName()), true);
+				player.displayClientMessage(Component.translatable("info.da.chaos.xfer.from", added, tileEntity.getName()), true);
 				tileEntity.chaos.subtract(added);
 			}
 			return InteractionResult.SUCCESS;
@@ -215,7 +215,7 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flags) {
 		if (!Screen.hasShiftDown()) {
-			tooltip.add(new TranslatableComponent("[Modular Item]").withStyle(ChatFormatting.BLUE));
+			tooltip.add(Component.translatable("[Modular Item]").withStyle(ChatFormatting.BLUE));
 		}
 		tooltip.add(getChaosInfo(stack));
 		EnergyUtils.addEnergyInfo(stack, tooltip);
@@ -223,22 +223,22 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 		if (host != null) {
 			long rfCost = getRFCost(stack);
 			if (rfCost >= 0) {
-				tooltip.add(new TranslatableComponent("info.da.opCost", Utils.formatNumber(rfCost)).withStyle(ChatFormatting.GRAY));
+				tooltip.add(Component.translatable("info.da.opCost", Utils.formatNumber(rfCost)).withStyle(ChatFormatting.GRAY));
 			}
 			if (shouldAlarm(stack) && hasShielding(stack)) {
-				tooltip.add(getCurrentCountdown(stack) > getCountdownAmount(stack) / 2 ? new TranslatableComponent("info.da.chaos.warning", getName(stack)).withStyle(ChatFormatting.RED) : new TextComponent(""));
+				tooltip.add(getCurrentCountdown(stack) > getCountdownAmount(stack) / 2 ? Component.translatable("info.da.chaos.warning", getName(stack)).withStyle(ChatFormatting.RED) : Component.literal(""));
 			}
 		}
 		boolean hasEnergy = EnergyUtils.getMaxEnergyStored(stack) > 0;
 		if (!hasEnergy || !hasShielding(stack)) {
 			if (!hasShielding(stack)) {
-				tooltip.add(new TranslatableComponent("info.da.chaos.noShield").withStyle(ChatFormatting.RED));
+				tooltip.add(Component.translatable("info.da.chaos.noShield").withStyle(ChatFormatting.RED));
 			}
 			if (!hasEnergy) {
-				tooltip.add(new TranslatableComponent("modular_item.draconicevolution.requires_energy").withStyle(ChatFormatting.RED));
+				tooltip.add(Component.translatable("modular_item.draconicevolution.requires_energy").withStyle(ChatFormatting.RED));
 			}
 			if (KeyBindings.toolModules != null && KeyBindings.toolModules.getTranslatedKeyMessage() != null) {
-				tooltip.add(new TranslatableComponent("modular_item.draconicevolution.requires_energy_press", KeyBindings.toolModules.getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.BLUE));
+				tooltip.add(Component.translatable("modular_item.draconicevolution.requires_energy_press", KeyBindings.toolModules.getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.BLUE));
 			}
 		}
 	}

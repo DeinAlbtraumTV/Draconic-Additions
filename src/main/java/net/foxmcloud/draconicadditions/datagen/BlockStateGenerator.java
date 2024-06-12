@@ -21,17 +21,16 @@ import net.minecraftforge.common.data.ExistingFileHelper;
  * Created by brandon3055 on 28/2/20.
  */
 public class BlockStateGenerator extends BlockStateProvider {
-
-	public BlockStateGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
-		super(gen, DraconicAdditions.MODID, exFileHelper);
-	}
+	
+    public BlockStateGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
+        super(gen.getPackOutput(), DraconicAdditions.MODID, exFileHelper);
+    }
 
 	@Override
 	protected void registerStatesAndModels() {
 		ResourceLocation machineTop = new ResourceLocation(DraconicEvolution.MODID, "block/parts/machine_top");
-		simpleBlock(DAContent.chaosLiquefier, models().cubeBottomTop("chaos_liquefier", modLoc("blocks/chaos_liquefier_front"), machineTop, machineTop));
-		simpleBlock(DAContent.chaosInfuser, models().cubeBottomTop("chaos_infuser", modLoc("blocks/chaos_infuser_front"), machineTop, machineTop));
-
+		simpleBlock(DAContent.chaosLiquifier.get(), models().cubeBottomTop("chaos_liquifier", modLoc("block/chaos_liquifier_front"), machineTop, machineTop));
+		simpleBlock(DAContent.chaosInfuser.get(), models().cubeBottomTop("chaos_infuser", modLoc("block/chaos_infuser_front"), machineTop, machineTop));
 	}
 
 	private void dummyBlock(Block block) {

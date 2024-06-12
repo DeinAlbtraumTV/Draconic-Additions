@@ -16,6 +16,7 @@ import com.brandon3055.draconicevolution.api.modules.ModuleTypes;
 import com.brandon3055.draconicevolution.api.modules.data.EnergyData;
 import com.brandon3055.draconicevolution.api.modules.lib.ModularOPStorage;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleHostImpl;
+import com.brandon3055.draconicevolution.init.DEDamage;
 import com.brandon3055.draconicevolution.init.DEModules;
 import com.brandon3055.draconicevolution.init.TechProperties;
 
@@ -23,7 +24,6 @@ import net.foxmcloud.draconicadditions.DAConfig;
 import net.foxmcloud.draconicadditions.lib.DASounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -43,7 +43,7 @@ public class Hermal extends RecordItem implements IModularEnergyItem {
 	public TechLevel techLevel;
 	
 	public Hermal(TechProperties props) {
-		super(1, () -> DASounds.hermal, props);
+		super(1, DASounds.hermal, props, 100);
 		techLevel = props.getTechLevel();
 	}
 	
@@ -54,12 +54,12 @@ public class Hermal extends RecordItem implements IModularEnergyItem {
 
 	@Override
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int unknownint, boolean unknownbool) {
-		if (!(entity instanceof Player) || entity.level.isClientSide) {
+		if (!(entity instanceof Player) || entity.level().isClientSide) {
 			return;
 		}
 		stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY).ifPresent(host -> {
 			EnergyData data = host.getModuleData(ModuleTypes.ENERGY_STORAGE);
-			if (data != null && data.capacity() == DEModules.chaoticEnergy.getData().capacity()) {
+			if (data != null && data.capacity() == ((EnergyData)DEModules.CHAOTIC_ENERGY.get().getData()).capacity()) {
 				Player player = (Player)entity;
 				if (EnergyUtils.canReceiveEnergy(player.getMainHandItem())) {
 					EnergyUtils.insertEnergy(player.getMainHandItem(), DAConfig.hermalRFAmount, false);
@@ -89,10 +89,10 @@ public class Hermal extends RecordItem implements IModularEnergyItem {
 	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entityLiving) {
 		if (!world.isClientSide) {
 			EntityType.LIGHTNING_BOLT.spawn((ServerLevel)world, stack, null, entityLiving.blockPosition(), MobSpawnType.COMMAND, true, true);
-			entityLiving.hurt(new DamageSource("administrative.kill").bypassInvul().bypassArmor().bypassMagic(), Float.MAX_VALUE);
+			entityLiving.hurt(DEDamage.killDamage(world), Float.MAX_VALUE);
 		}
 		else {
-			entityLiving.sendMessage(new TranslatableComponent("info.da.hermal.eat.success"), null);
+			entityLiving.sendSystemMessage(Component.translatable("info.da.hermal.eat.success"));
 		}
 		stack.shrink(1);
 		return stack;
@@ -100,17 +100,17 @@ public class Hermal extends RecordItem implements IModularEnergyItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, @NotNull InteractionHand hand) {
-		player.displayClientMessage(new TranslatableComponent("info.da.hermal.eat.attempt"), true);
+		player.displayClientMessage(Component.translatable("info.da.hermal.eat.attempt"), true);
 		return super.use(world, player, hand);
 	}
 
 	@Override
 	public void onCraftedBy(ItemStack stack, Level world, Player player) {
-		player.displayClientMessage(new TranslatableComponent("info.da.hermal.craft"), true);
+		player.displayClientMessage(Component.translatable("info.da.hermal.craft"), true);
 	}
 
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> components, TooltipFlag flag) {
-		components.add(new TranslatableComponent("info.da.hermal.lore").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.ITALIC));
+		components.add(Component.translatable("info.da.hermal.lore").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.ITALIC));
 	}
 
 	@Override

@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "draconicevolution:wyvern_core"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  },
   "pattern": [
     "GGG",
     "G G",
     " C "
   ],
-  "key": {
-    "G": {
-      "tag": "forge:ingots/gold"
-    },
-    "C": {
-      "item": "draconicevolution:wyvern_core"
-    }
-  },
   "result": {
     "item": "draconicadditions:wyvern_necklace"
   }

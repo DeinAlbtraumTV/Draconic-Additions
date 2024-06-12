@@ -1,72 +1,55 @@
 package net.foxmcloud.draconicadditions.lib;
 
 import static com.brandon3055.brandonscore.api.TechLevel.*;
-import static com.brandon3055.draconicevolution.api.modules.ModuleTypes.AUTO_FEED;
+import static com.brandon3055.draconicevolution.api.modules.ModuleTypes.*;
 import static net.foxmcloud.draconicadditions.DAConfig.*;
 import static net.foxmcloud.draconicadditions.modules.ModuleTypes.*;
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.function.Function;
 
-import com.brandon3055.brandonscore.client.utils.CyclingItemGroup;
 import com.brandon3055.draconicevolution.api.modules.Module;
 import com.brandon3055.draconicevolution.api.modules.data.AutoFeedData;
-import com.brandon3055.draconicevolution.api.modules.data.NoData;
-import com.brandon3055.draconicevolution.api.modules.lib.BaseModule;
-import com.brandon3055.draconicevolution.api.modules.lib.ModuleImpl;
 import com.brandon3055.draconicevolution.api.modules.items.ModuleItem;
+import com.brandon3055.draconicevolution.api.modules.lib.ModuleImpl;
+import com.brandon3055.draconicevolution.init.DEModules;
 import com.brandon3055.draconicevolution.init.ModuleCfg;
 
 import net.foxmcloud.draconicadditions.DraconicAdditions;
-import net.foxmcloud.draconicadditions.modules.data.*;
-import net.minecraft.resources.ResourceLocation;
+import net.foxmcloud.draconicadditions.modules.data.ChaosInjectorData;
+import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
+import net.foxmcloud.draconicadditions.modules.data.TickAccelData;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = DraconicAdditions.MODID, bus = MOD)
-@ObjectHolder(DraconicAdditions.MODID)
-public class DAModules {	
-	@ObjectHolder("chaotic_auto_feed")
-	public static Module<NoData> chaoticAutoFeed;
+public class DAModules {
+	public static final DeferredRegister<Module<?>> MODULES = DeferredRegister.create(DEModules.MODULE_KEY, DraconicAdditions.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DraconicAdditions.MODID);
+    
+    public static void init() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        MODULES.register(eventBus);
+        ITEMS.register(eventBus);
+    }
 
-	@ObjectHolder("draconic_tick_accel")
-	public static Module<TickAccelData> draconicTickAccel;
-
-	@ObjectHolder("chaotic_tick_accel")
-	public static Module<TickAccelData> chaoticTickAccel;
+	public static final RegistryObject<Module<?>> chaoticAutoFeed = MODULES.register("chaotic_auto_feed", () -> new ModuleImpl<>(AUTO_FEED, CHAOTIC, autoFeedData((float)chaoticFeedAmount)));
+	public static final RegistryObject<Module<?>> draconicTickAccel = MODULES.register("draconic_tick_accel", () -> new ModuleImpl<>(TICK_ACCEL, DRACONIC, tickAccelData(draconicAccelTicks)));
+	public static final RegistryObject<Module<?>> chaoticTickAccel = MODULES.register("chaotic_tick_accel", () -> new ModuleImpl<>(TICK_ACCEL, CHAOTIC, tickAccelData(chaoticAccelTicks)));
+	public static final RegistryObject<Module<?>> semiStableChaos = MODULES.register("semi_stable_chaos", () -> new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(semiStableInstabilityMax, semiStableChaosMax)));
+	public static final RegistryObject<Module<?>> stableChaos = MODULES.register("stable_chaos", () -> new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(stableInstabilityMax, stableChaosMax)));
+	public static final RegistryObject<Module<?>> unstableChaos = MODULES.register("unstable_chaos", () -> new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(unstableInstabilityMax, unstableChaosMax)));
+	public static final RegistryObject<Module<?>> chaosInjector = MODULES.register("chaos_injector", () -> new ModuleImpl<>(CHAOS_INJECTOR, CHAOTIC, chaosInjectorData(chaosInjectorRate)));
 	
-	@ObjectHolder("semi_stable_chaos")
-	public static Module<StableChaosData> semiStableChaos;
-	
-	@ObjectHolder("stable_chaos")
-	public static Module<StableChaosData> stableChaos;
-	
-	@ObjectHolder("unstable_chaos")
-	public static Module<StableChaosData> unstableChaos;
-	
-	@ObjectHolder("chaos_injector")
-	public static Module<ChaosInjectorData> chaosInjector;
-
-	private static transient ArrayList<ResourceLocation> ITEM_REGISTRY_ORDER = new ArrayList<>();
-	public static transient Map<BaseModule<?>, Item> moduleItemMap = new LinkedHashMap<>();
-	private static transient CyclingItemGroup moduleGroup = new CyclingItemGroup(DraconicAdditions.MODID + ".modules", 40, () -> moduleItemMap.values().toArray(new Item[0]), ITEM_REGISTRY_ORDER);
-
-	private static void registerModules() {
-		register(new ModuleImpl<>(AUTO_FEED, CHAOTIC, autoFeedData((float)chaoticFeedAmount)), "chaotic_auto_feed");
-		register(new ModuleImpl<>(TICK_ACCEL, DRACONIC, tickAccelData(draconicAccelTicks)), "draconic_tick_accel");
-		register(new ModuleImpl<>(TICK_ACCEL, CHAOTIC, tickAccelData(chaoticAccelTicks)), "chaotic_tick_accel");
-		register(new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(semiStableInstabilityMax, semiStableChaosMax)), "semi_stable_chaos");
-		register(new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(stableInstabilityMax, stableChaosMax)), "stable_chaos");
-		register(new ModuleImpl<>(STABLE_CHAOS, CHAOTIC, stableChaosData(unstableInstabilityMax, unstableChaosMax)), "unstable_chaos");
-		register(new ModuleImpl<>(CHAOS_INJECTOR, CHAOTIC, chaosInjectorData(chaosInjectorRate)), "chaos_injector");
-	}
+    public static final RegistryObject<ModuleItem<?>> itemChaoticAutoFeed   = ITEMS.register("item_chaotic_auto_feed",   () -> new ModuleItem<>(chaoticAutoFeed));
+	public static final RegistryObject<ModuleItem<?>> itemDraconicTickAccel = ITEMS.register("item_draconic_tick_accel", () -> new ModuleItem<>(draconicTickAccel));
+	public static final RegistryObject<ModuleItem<?>> itemChaoticTickAccel  = ITEMS.register("item_chaotic_tick_accel",  () -> new ModuleItem<>(chaoticTickAccel));
+	public static final RegistryObject<ModuleItem<?>> itemSemiStableChaos   = ITEMS.register("item_semi_stable_chaos",   () -> new ModuleItem<>(semiStableChaos));
+	public static final RegistryObject<ModuleItem<?>> itemStableChaos       = ITEMS.register("item_stable_chaos",        () -> new ModuleItem<>(stableChaos));
+	public static final RegistryObject<ModuleItem<?>> itemUnstableChaos     = ITEMS.register("item_unstable_chaos",      () -> new ModuleItem<>(unstableChaos));
+	public static final RegistryObject<ModuleItem<?>> itemChaosInjector     = ITEMS.register("item_chaos_injector",      () -> new ModuleItem<>(chaosInjector));
 
 	private static Function<Module<AutoFeedData>, AutoFeedData> autoFeedData(float defFoodStorage) {
 		return e -> {
@@ -93,27 +76,5 @@ public class DAModules {
 		return e -> {
 			return new ChaosInjectorData(ModuleCfg.getModuleInt(e, "injection_rate", defRate));
 		};
-	}
-
-	private static void register(ModuleImpl<?> module, String name) {
-		ModuleItem<?> item = new ModuleItem<>(new Properties().tab(moduleGroup), module);
-		item.setRegistryName(name + "_module");
-		module.setRegistryName(name);
-		module.setModuleItem(item);
-		moduleItemMap.put(module, item);
-	}
-
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		moduleItemMap.clear();
-		registerModules();
-		moduleItemMap.keySet().forEach(BaseModule::reloadData);
-		moduleItemMap.values().forEach(e -> event.getRegistry().register(e));
-		ModuleCfg.saveStateConfig();
-	}
-
-	@SubscribeEvent
-	public static void registerModules(RegistryEvent.Register<Module<?>> event) {
-		moduleItemMap.keySet().forEach(e -> event.getRegistry().register(e));
 	}
 }

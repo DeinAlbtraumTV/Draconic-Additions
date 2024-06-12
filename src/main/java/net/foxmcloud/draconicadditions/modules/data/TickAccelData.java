@@ -6,7 +6,6 @@ import com.brandon3055.draconicevolution.api.modules.data.ModuleData;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleContext;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class TickAccelData implements ModuleData<TickAccelData> {
 	private final int ticks;
@@ -26,6 +25,6 @@ public class TickAccelData implements ModuleData<TickAccelData> {
 
 	@Override
 	public void addInformation(Map<Component, Component> map, ModuleContext context) {
-		map.put(new TranslatableComponent("module.draconicadditions.tick_accel.name"), new TranslatableComponent("module.draconicadditions.tick_accel.value", ticks));
+		map.put(Component.translatable("module.draconicadditions.tick_accel.name"), Component.translatable("module.draconicadditions.tick_accel.value", ticks));
 	}
 }

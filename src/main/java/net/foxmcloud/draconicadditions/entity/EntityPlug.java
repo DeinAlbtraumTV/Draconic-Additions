@@ -1,12 +1,14 @@
 package net.foxmcloud.draconicadditions.entity;
 
+import org.joml.Vector3d;
+
 import com.brandon3055.brandonscore.utils.ItemNBTHelper;
-import com.mojang.math.Vector3d;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -100,7 +102,7 @@ public class EntityPlug extends Entity {
 	protected void defineSynchedData() {}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return null;
 	}
 }

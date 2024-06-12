@@ -1,284 +1,335 @@
 package net.foxmcloud.draconicadditions.datagen;
 
-import static com.brandon3055.draconicevolution.init.DEContent.*;
-import static com.brandon3055.draconicevolution.init.DEModules.*;
 import static com.brandon3055.draconicevolution.init.DETags.Items.*;
 import static net.foxmcloud.draconicadditions.lib.DAContent.*;
 import static net.foxmcloud.draconicadditions.lib.DAModules.*;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.brandon3055.brandonscore.api.TechLevel;
 import com.brandon3055.draconicevolution.datagen.FusionRecipeBuilder;
 import com.brandon3055.draconicevolution.init.DEContent;
+import com.brandon3055.draconicevolution.init.DEModules;
 
+import codechicken.lib.datagen.recipe.FurnaceRecipeBuilder;
+import codechicken.lib.datagen.recipe.RecipeProvider;
+import codechicken.lib.datagen.recipe.ShapedRecipeBuilder;
+import codechicken.lib.datagen.recipe.ShapelessRecipeBuilder;
 import net.foxmcloud.draconicadditions.DraconicAdditions;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.HashCache;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class RecipeGenerator extends RecipeProvider {
 
-	public RecipeGenerator(DataGenerator generatorIn) {
-		super(generatorIn);
-	}
+	public RecipeGenerator(PackOutput pOutput) {
+        super(pOutput, DraconicAdditions.MODID);
+    }
 
 	@Override
-	protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-		blocks(consumer);
-		items(consumer);
-		modules(consumer);
+	protected void registerRecipes() {
+		blocks();
+		items();
+		modules();
 	}
 
-	private static void blocks(Consumer<FinishedRecipe> consumer) {
-		if (chaosLiquefier != null) {
-			FusionRecipeBuilder.fusionRecipe(chaosLiquefier)
-			.catalyst(DEContent.crafting_core)
-			.energy(2500000)
-			.techLevel(TechLevel.CHAOTIC)
-			.ingredient(chaosHeart)
-			.ingredient(chaosContainer)
-			.build(consumer, folder("blocks", chaosLiquefier));
+	private void blocks() {
+		if (chaosLiquifier != null) {
+			fusionRecipe(itemChaosLiquifier, "blocks")
+				.catalyst(DEContent.CRAFTING_CORE.get())
+				.energy(2500000)
+				.techLevel(TechLevel.CHAOTIC)
+				.ingredient(chaosHeart)
+				.ingredient(chaosContainer);
 		}
 		
 		if (chaosInfuser != null) {
-			FusionRecipeBuilder.fusionRecipe(chaosInfuser)
-			.catalyst(DEContent.energy_transfuser)
-			.energy(2000000)
-			.techLevel(TechLevel.CHAOTIC)
-			.ingredient(chaosContainer)
-			.build(consumer, folder("blocks", chaosInfuser));
+			fusionRecipe(itemChaosInfuser, "blocks")
+				.catalyst(DEContent.ENERGY_TRANSFUSER.get())
+				.energy(2000000)
+				.techLevel(TechLevel.CHAOTIC)
+				.ingredient(chaosContainer);
 		}
 	}
 
-	private static void items(Consumer<FinishedRecipe> consumer) {
+	private void items() {
 		if (inertPotatoHelm != null) {
-			ShapedRecipeBuilder.shaped(inertPotatoHelm)
-			.pattern("PBP")
-			.pattern("P P")
-			.define('P', Items.POTATO)
-			.define('B', Items.POISONOUS_POTATO)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", inertPotatoHelm));
+			shapedRecipe(inertPotatoHelm, "items")
+				.patternLine("PBP")
+				.patternLine("P P")
+				.key('P', Items.POTATO)
+				.key('B', Items.POISONOUS_POTATO);
 		}
 
 		if (inertPotatoChest != null) {
-			ShapedRecipeBuilder.shaped(inertPotatoChest)
-			.pattern("P P")
-			.pattern("PBP")
-			.pattern("PPP")
-			.define('P', Items.POTATO)
-			.define('B', Items.POISONOUS_POTATO)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", inertPotatoChest));
+			shapedRecipe(inertPotatoChest, "items")
+				.patternLine("P P")
+				.patternLine("PBP")
+				.patternLine("PPP")
+				.key('P', Items.POTATO)
+				.key('B', Items.POISONOUS_POTATO);
 		}
 
 		if (inertPotatoLegs != null) {
-			ShapedRecipeBuilder.shaped(inertPotatoLegs)
-			.pattern("PBP")
-			.pattern("P P")
-			.pattern("P P")
-			.define('P', Items.POTATO)
-			.define('B', Items.POISONOUS_POTATO)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", inertPotatoLegs));
+			shapedRecipe(inertPotatoLegs, "items")
+				.patternLine("PBP")
+				.patternLine("P P")
+				.patternLine("P P")
+				.key('P', Items.POTATO)
+				.key('B', Items.POISONOUS_POTATO);
 		}
 
 		if (inertPotatoBoots != null) {
-			ShapedRecipeBuilder.shaped(inertPotatoBoots)
-			.pattern("P P")
-			.pattern("P P")
-			.define('P', Items.POTATO)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", inertPotatoBoots));
+			shapedRecipe(inertPotatoBoots, "items")
+				.patternLine("P P")
+				.patternLine("P P")
+				.key('P', Items.POTATO);
 		}
 
+		/*
 		if (infusedPotatoHelm != null) {
-			ShapedRecipeBuilder.shaped(infusedPotatoHelm)
-			.pattern("DRD")
-			.pattern("RIR")
-			.pattern("DRD")
-			.define('D', INGOTS_DRACONIUM)
-			.define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-			.define('I', inertPotatoHelm)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", infusedPotatoHelm));
+			shapedRecipe(infusedPotatoHelm, "items")
+				.patternLine("DRD")
+				.patternLine("RIR")
+				.patternLine("DRD")
+				.key('D', INGOTS_DRACONIUM)
+				.key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				.key('I', inertPotatoHelm);
 		}
 
 		if (infusedPotatoChest != null) {
-			ShapedRecipeBuilder.shaped(infusedPotatoChest)
-			.pattern("DRD")
-			.pattern("RIR")
-			.pattern("DRD")
-			.define('D', INGOTS_DRACONIUM)
-			.define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-			.define('I', inertPotatoChest)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", infusedPotatoChest));
+			shapedRecipe(infusedPotatoChest, "items")
+				.patternLine("DRD")
+				.patternLine("RIR")
+				.patternLine("DRD")
+				.key('D', INGOTS_DRACONIUM)
+				.key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				.key('I', inertPotatoChest);
 		}
 
 		if (infusedPotatoLegs != null) {
-			ShapedRecipeBuilder.shaped(infusedPotatoLegs)
-			.pattern("DRD")
-			.pattern("RIR")
-			.pattern("DRD")
-			.define('D', INGOTS_DRACONIUM)
-			.define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-			.define('I', inertPotatoLegs)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", infusedPotatoLegs));
+			shapedRecipe(infusedPotatoLegs, "items")
+				.patternLine("DRD")
+				.patternLine("RIR")
+				.patternLine("DRD")
+				.key('D', INGOTS_DRACONIUM)
+				.key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				.key('I', inertPotatoLegs);
 		}
 
 		if (infusedPotatoBoots != null) {
-			ShapedRecipeBuilder.shaped(infusedPotatoBoots)
-			.pattern("DRD")
-			.pattern("RIR")
-			.pattern("DRD")
-			.define('D', INGOTS_DRACONIUM)
-			.define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-			.define('I', inertPotatoBoots)
-			.unlockedBy("has_draconium", has(DEContent.ingot_draconium))
-			.save(consumer, folder("items", infusedPotatoBoots));
+			shapedRecipe(infusedPotatoBoots, "items")
+				.patternLine("DRD")
+				.patternLine("RIR")
+				.patternLine("DRD")
+				.key('D', INGOTS_DRACONIUM)
+				.key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				.key('I', inertPotatoBoots);
 		}
+		*/
 
 		if (chaosContainer != null) {
-			FusionRecipeBuilder.fusionRecipe(chaosContainer)
-			.catalyst(Items.BUCKET)
-			.energy(250000)
-			.techLevel(TechLevel.DRACONIC)
-			.ingredient(infused_obsidian)
-			.ingredient(infused_obsidian)
-			.ingredient(energy_core_wyvern)
-			.ingredient(dislocator)
-			.build(consumer, folder("items", chaosContainer));
+			fusionRecipe(chaosContainer, "items")
+				.catalyst(Items.BUCKET)
+				.energy(250000)
+				.techLevel(TechLevel.DRACONIC)
+				.ingredient(DEContent.INFUSED_OBSIDIAN.get())
+				.ingredient(DEContent.INFUSED_OBSIDIAN.get())
+				.ingredient(DEContent.ENERGY_CORE_WYVERN.get())
+				.ingredient(DEContent.DISLOCATOR.get());
 		}
 
 		if (necklaceWyvern != null) {
-			ShapedRecipeBuilder.shaped(necklaceWyvern)
-			.pattern("GGG")
-			.pattern("G G")
-			.pattern(" C ")
-			.define('G', Tags.Items.INGOTS_GOLD)
-			.define('C', core_wyvern)
-			.unlockedBy("has_core_wyvern", has(core_wyvern))
-			.save(consumer, folder("items", necklaceWyvern));
+			shapedRecipe(necklaceWyvern, "items")
+				.patternLine("GGG")
+				.patternLine("G G")
+				.patternLine(" C ")
+				.key('G', Tags.Items.INGOTS_GOLD)
+				.key('C', DEContent.CORE_WYVERN.get());
 		}
 
 		if (necklaceDraconic != null) {
-			ShapelessRecipeBuilder.shapeless(necklaceDraconic)
-			.requires(necklaceWyvern)
-			.requires(core_awakened)
-			.unlockedBy("has_core_awakened", has(core_awakened))
-			.save(consumer, folder("items", necklaceDraconic));
+			shapelessRecipe(necklaceDraconic)
+				.addIngredient(necklaceWyvern)
+				.addIngredient(DEContent.CORE_AWAKENED.get());
 		}
 
 		if (necklaceChaotic != null) {
-			ShapelessRecipeBuilder.shapeless(necklaceChaotic)
-			.requires(necklaceDraconic)
-			.requires(core_chaotic)
-			.unlockedBy("has_core_chaotic", has(core_chaotic))
-			.save(consumer, folder("items", necklaceChaotic));
+			shapelessRecipe(necklaceChaotic)
+				.addIngredient(necklaceDraconic)
+				.addIngredient(DEContent.CORE_CHAOTIC.get());
 		}
 
 		if (harnessWyvern != null) {
-			ShapedRecipeBuilder.shaped(harnessWyvern)
-			.pattern("DDD")	
-			.pattern("DLD")
-			.pattern("DSD")
-			.define('D', INGOTS_DRACONIUM)
-			.define('L', dislocator)
-			.define('S', wyvernShieldControl.getItem())
-			.unlockedBy("has_core_wyvern", has(core_wyvern))
-			.save(consumer, folder("items", harnessWyvern));
+			shapedRecipe(harnessWyvern, "items")
+				.patternLine("DDD")	
+				.patternLine("DLD")
+				.patternLine("DSD")
+				.key('D', INGOTS_DRACONIUM)
+				.key('L', DEContent.DISLOCATOR.get())
+				.key('S', DEModules.WYVERN_SHIELD_CONTROL.get().getItem());
 		}
 
 		if (harnessDraconic != null) {
-			ShapedRecipeBuilder.shaped(harnessDraconic)
-			.pattern("AAA")
-			.pattern("AHA")
-			.pattern("ASA")
-			.define('A', INGOTS_DRACONIUM_AWAKENED)
-			.define('H', harnessWyvern)
-			.define('S', draconicShieldControl.getItem())
-			.unlockedBy("has_core_awakened", has(core_awakened))
-			.save(consumer, folder("items", harnessDraconic));
+			shapedRecipe(harnessDraconic, "items")
+				.patternLine("AAA")
+				.patternLine("AHA")
+				.patternLine("ASA")
+				.key('A', INGOTS_DRACONIUM_AWAKENED)
+				.key('H', harnessWyvern)
+				.key('S', DEModules.DRACONIC_SHIELD_CONTROL.get().getItem());
 		}
 
 		if (harnessChaotic != null) {
-			ShapedRecipeBuilder.shaped(harnessChaotic)
-			.pattern("CCC")
-			.pattern("CHC")
-			.pattern("CSC")
-			.define('C', chaos_frag_medium)
-			.define('H', harnessDraconic)
-			.define('S', chaoticShieldControl.getItem())
-			.unlockedBy("has_core_chaotic", has(core_chaotic))
-			.save(consumer, folder("items", harnessChaotic));
+			shapedRecipe(harnessChaotic, "items")
+				.patternLine("CCC")
+				.patternLine("CHC")
+				.patternLine("CSC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM.get())
+				.key('H', harnessDraconic)
+				.key('S', DEModules.CHAOTIC_SHIELD_CONTROL.get().getItem());
 		}
 	}
 	
-	private static void modules(Consumer<FinishedRecipe> consumer) {
+	private void modules() {
 		if (chaoticAutoFeed != null) {
-			ShapedRecipeBuilder.shaped(chaoticAutoFeed.getItem())
-			.pattern("FCF")
-			.pattern("DAD")
-			.pattern("FCF")
-			.define('F', chaos_frag_medium)
-			.define('D', core_draconium)
-			.define('A', draconicAutoFeed.getItem())
-			.define('C', Items.COOKIE)
-			.unlockedBy("has_module_core", has(module_core))
-			.save(consumer, folder("modules", chaoticAutoFeed));
+			shapedRecipe(chaoticAutoFeed.get().getItem(), "modules")
+				.patternLine("FCF")
+				.patternLine("DAD")
+				.patternLine("FCF")
+				.key('F', DEContent.CHAOS_FRAG_MEDIUM.get())
+				.key('D', DEContent.CORE_DRACONIUM.get())
+				.key('A', DEModules.DRACONIC_AUTO_FEED.get().getItem())
+				.key('C', Items.COOKIE);
 		}
 
 		if (draconicTickAccel != null) {
-			ShapedRecipeBuilder.shaped(draconicTickAccel.getItem())
-			.pattern("A A")
-			.pattern("SCS")
-			.pattern("A A")
-			.define('A', INGOTS_DRACONIUM_AWAKENED)
-			.define('S', wyvernSpeed.getItem())
-			.define('C', module_core)
-			.unlockedBy("has_module_core", has(module_core))
-			.save(consumer, folder("modules", draconicTickAccel));
+			shapedRecipe(draconicTickAccel.get().getItem(), "modules")
+				.patternLine("A A")
+				.patternLine("SCS")
+				.patternLine("A A")
+				.key('A', INGOTS_DRACONIUM_AWAKENED)
+				.key('S', DEModules.WYVERN_SPEED.get().getItem())
+				.key('C', DEContent.MODULE_CORE.get());
 		}
 
 		if (chaoticTickAccel != null) {
-			ShapedRecipeBuilder.shaped(chaoticTickAccel.getItem())
-			.pattern("C C")
-			.pattern("SDS")
-			.pattern("C C")
-			.define('C', chaos_frag_medium)
-			.define('S', draconicSpeed.getItem())
-			.define('D', draconicTickAccel.getItem())
-			.unlockedBy("has_module_core", has(module_core))
-			.save(consumer, folder("modules", chaoticTickAccel));
+			shapedRecipe(chaoticTickAccel.get().getItem(), "modules")
+				.patternLine("C C")
+				.patternLine("SDS")
+				.patternLine("C C")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('S', DEModules.DRACONIC_SPEED.get().getItem())
+				.key('D', draconicTickAccel.get().getItem());
 		}
 	}
 
-	public static String folder(String folder, IForgeRegistryEntry<?> key) {
-		return DraconicAdditions.MODID + ":" + folder + "/" + key.getRegistryName().getPath();
-	}
-
-	public static String folder(String folder, String name) {
-		return DraconicAdditions.MODID + ":" + folder + "/" + name;
-	}
-
-	@Override
-	public void run(HashCache cache) {
-		super.run(cache);
-	}
-
-	public static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
+	public static class NBTIngredient extends StrictNBTIngredient {
 		public NBTIngredient(ItemStack stack) {
 			super(stack);
 		}
 	}
+	
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result, ResourceLocation id) {
+        return builder(FusionRecipeBuilder.builder(result.get(), 1, id));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(ItemLike result) {
+        return builder(FusionRecipeBuilder.builder(result));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(ItemLike result, int count) {
+        return builder(FusionRecipeBuilder.builder(new ItemStack(result, count)));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result) {
+        return builder(FusionRecipeBuilder.builder(result.get(), 1));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(FusionRecipeBuilder.builder(result.get(), 1, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result, String folder, Function<String, String> customPath) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(FusionRecipeBuilder.builder(result.get(), 1, new ResourceLocation(id.getNamespace(), folder + "/" + customPath.apply(id.getPath()))));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result, int count, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(FusionRecipeBuilder.builder(result.get(), count, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(Supplier<? extends ItemLike> result, int count) {
+        return builder(FusionRecipeBuilder.builder(new ItemStack(result.get(), count)));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(ItemStack result) {
+        return builder(FusionRecipeBuilder.builder(result, ForgeRegistries.ITEMS.getKey(result.getItem())));
+    }
+
+    protected FusionRecipeBuilder fusionRecipe(ItemStack result, ResourceLocation id) {
+        return builder(FusionRecipeBuilder.builder(result, id));
+    }
+
+    protected FurnaceRecipeBuilder smelting(Supplier<? extends ItemLike> result, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(FurnaceRecipeBuilder.smelting(result.get(), 1, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected FurnaceRecipeBuilder smelting(Supplier<? extends ItemLike> result, String folder, Function<String, String> customPath) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(FurnaceRecipeBuilder.smelting(result.get(), 1, new ResourceLocation(id.getNamespace(), folder + "/" + customPath.apply(id.getPath()))));
+    }
+
+    protected ShapedRecipeBuilder shapedRecipe(Supplier<? extends ItemLike> result, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapedRecipeBuilder.builder(result.get(), 1, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected ShapedRecipeBuilder shapedRecipe(ItemLike result, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.asItem());
+        return builder(ShapedRecipeBuilder.builder(result, 1, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected ShapedRecipeBuilder shapedRecipe(Supplier<? extends ItemLike> result, int count, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapedRecipeBuilder.builder(result.get(), count, new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected ShapedRecipeBuilder shapedRecipe(Supplier<? extends ItemLike> result, int count, String folder, Function<String, String> customPath) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapedRecipeBuilder.builder(result.get(), count, new ResourceLocation(id.getNamespace(), folder + "/" + customPath.apply(id.getPath()))));
+    }
+
+    protected ShapelessRecipeBuilder shapelessRecipe(Supplier<? extends ItemLike> result, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapelessRecipeBuilder.builder(new ItemStack(result.get(), 1), new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected ShapelessRecipeBuilder shapelessRecipe(Supplier<? extends ItemLike> result, String folder, Function<String, String> customPath) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapelessRecipeBuilder.builder(new ItemStack(result.get(), 1), new ResourceLocation(id.getNamespace(), folder + "/" + customPath.apply(id.getPath()))));
+    }
+
+    protected ShapelessRecipeBuilder shapelessRecipe(Supplier<? extends ItemLike> result, int count, String folder) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.get().asItem());
+        return builder(ShapelessRecipeBuilder.builder(new ItemStack(result.get(), count), new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath())));
+    }
+
+    protected ShapelessRecipeBuilder shapelessRecipe(ItemLike result, int count, ResourceLocation id) {
+        return builder(ShapelessRecipeBuilder.builder(new ItemStack(result, count), id));
+    }
+
+    protected ShapelessRecipeBuilder shapelessRecipe(ItemLike result, int count, String folder, Function<String, String> customPath) {
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(result.asItem());
+        return builder(ShapelessRecipeBuilder.builder(new ItemStack(result, count), new ResourceLocation(id.getNamespace(), folder + "/" + customPath.apply(id.getPath()))));
+    }
 }

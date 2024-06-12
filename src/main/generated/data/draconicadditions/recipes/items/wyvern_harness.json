@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "DDD",
-    "DLD",
-    "DSD"
-  ],
   "key": {
     "D": {
       "tag": "forge:ingots/draconium"
@@ -13,9 +8,14 @@
       "item": "draconicevolution:dislocator"
     },
     "S": {
-      "item": "draconicevolution:wyvern_shield_control_module"
+      "item": "draconicevolution:item_wyvern_shield_control"
     }
   },
+  "pattern": [
+    "DDD",
+    "DLD",
+    "DSD"
+  ],
   "result": {
     "item": "draconicadditions:wyvern_harness"
   }

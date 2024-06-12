@@ -5,7 +5,6 @@ import com.brandon3055.draconicevolution.api.modules.ModuleCategory;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public interface IChaosContainer {
@@ -39,6 +38,6 @@ public interface IChaosContainer {
 	}
 
 	public default Component getChaosInfo(ItemStack stack) {
-		return new TranslatableComponent("info.da.storedChaos", getChaos(stack), getMaxChaos(stack)).withStyle(ChatFormatting.GRAY);
+		return Component.translatable("info.da.storedChaos", getChaos(stack), getMaxChaos(stack)).withStyle(ChatFormatting.GRAY);
 	}
 }

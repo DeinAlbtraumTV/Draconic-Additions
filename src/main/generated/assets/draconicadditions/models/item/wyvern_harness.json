@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "draconicadditions:items/curios/wyvern_harness"
+    "layer0": "draconicadditions:item/curios/wyvern_harness"
   }
 }

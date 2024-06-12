@@ -21,7 +21,6 @@ import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
@@ -54,7 +53,7 @@ public class StableChaosEntity extends ModuleEntity<StableChaosData> implements 
 				ServerLevel level;
 				if (moduleContext instanceof StackModuleContext stackContext) {
 					expLoc = stackContext.getEntity().blockPosition();
-					level = (ServerLevel)stackContext.getEntity().level;
+					level = (ServerLevel)stackContext.getEntity().level();
 					//stackContext.getEntity().sendMessage(new TextComponent("You're lucky this didn't explode in your face."), Util.NIL_UUID);
 				}
 				else if (moduleContext instanceof TileModuleContext tileContext) {
@@ -132,9 +131,9 @@ public class StableChaosEntity extends ModuleEntity<StableChaosData> implements 
 	@Override
 	public void addToolTip(List<Component> tooltip) {
 		StableChaosData data = (StableChaosData)module.getData();
-		tooltip.add(new TranslatableComponent("info.da.storedChaos", chaos, data.getMaxChaos()));
-		tooltip.add(new TranslatableComponent("info.da.instability", instability, data.getMaxInstability()));
-		tooltip.add(new TranslatableComponent("info.da.opCost", getRFCost()));
+		tooltip.add(Component.translatable("info.da.storedChaos", chaos, data.getMaxChaos()));
+		tooltip.add(Component.translatable("info.da.instability", instability, data.getMaxInstability()));
+		tooltip.add(Component.translatable("info.da.opCost", getRFCost()));
 	}
 
 	@Override

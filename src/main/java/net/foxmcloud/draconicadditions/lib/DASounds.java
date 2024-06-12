@@ -1,55 +1,31 @@
 package net.foxmcloud.draconicadditions.lib;
 
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
-
-import java.lang.reflect.Field;
-
 import com.brandon3055.draconicevolution.handlers.DESounds;
 
 import net.foxmcloud.draconicadditions.DraconicAdditions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * Created by FoxMcloud5655 on 11/27/2019.
  * This stores all of the sound events for Draconic Additions.
  */
 
-@ObjectHolder(DraconicAdditions.MODID)
-@Mod.EventBusSubscriber(modid = DraconicAdditions.MODID, bus = MOD)
 public class DASounds extends DESounds {
+	
+    private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DraconicAdditions.MODID);
 
-	@ObjectHolder("hermal")
-	public static SoundEvent hermal = getSoundEvent("hermal");
-	
-	@ObjectHolder("unplug")
-	public static SoundEvent unplug = getSoundEvent("unplug");
-	
-	@ObjectHolder("unplug")
-	public static SoundEvent boom = getSoundEvent("boom");
-	
-	public static SoundEvent getSoundEvent(final String soundName) {
-		final ResourceLocation soundRL = new ResourceLocation(DraconicAdditions.MODID, soundName);
-		return new SoundEvent(soundRL).setRegistryName(soundRL);
-	}
-	
-	// A little hacky, but saves on coding.  Taken from the Minecraft mod called Alex's Mobs.
-	@SubscribeEvent
-	public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-		try {
-			for (Field f : DASounds.class.getDeclaredFields()) {
-				Object obj = f.get(null);
-				if (obj instanceof SoundEvent) {
-					event.getRegistry().register((SoundEvent) obj);
-				}
-			}
-		}
-		catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public static void init() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        SOUNDS.register(eventBus);
+    }
+
+	public static final RegistryObject<SoundEvent> hermal = SOUNDS.register("hermal", () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(DraconicAdditions.MODID, "hermal"), 16F));
+	public static final RegistryObject<SoundEvent> unplug = SOUNDS.register("unplug", () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(DraconicAdditions.MODID, "unplug"), 16F));
+	public static final RegistryObject<SoundEvent> boom   = SOUNDS.register("boom",   () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(DraconicAdditions.MODID, "boom"), 16F));
 }

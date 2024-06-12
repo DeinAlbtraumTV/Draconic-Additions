@@ -1,52 +1,80 @@
 package net.foxmcloud.draconicadditions.client.gui;
 
-import com.brandon3055.brandonscore.client.BCGuiSprites;
+import static codechicken.lib.gui.modular.lib.geometry.Constraint.*;
+import static codechicken.lib.gui.modular.lib.geometry.GeoParam.*;
+import com.brandon3055.brandonscore.client.BCGuiTextures;
 import com.brandon3055.brandonscore.client.gui.GuiToolkit;
-import com.brandon3055.brandonscore.client.gui.GuiToolkit.LayoutPos;
-import com.brandon3055.brandonscore.client.gui.modulargui.GuiElement;
-import com.brandon3055.brandonscore.client.gui.modulargui.GuiElementManager;
-import com.brandon3055.brandonscore.client.gui.modulargui.ModularGuiContainer;
-import com.brandon3055.brandonscore.client.gui.modulargui.guielements.GuiLabel;
-import com.brandon3055.brandonscore.client.gui.modulargui.guielements.GuiTexture;
-import com.brandon3055.brandonscore.client.gui.modulargui.templates.TBasicMachine;
-import com.brandon3055.brandonscore.inventory.ContainerSlotLayout;
-import com.brandon3055.draconicevolution.client.gui.modular.TModularMachine;
-
+import com.brandon3055.brandonscore.client.gui.modulargui.templates.ButtonRow;
+import com.brandon3055.draconicevolution.client.DEGuiTextures;
+import codechicken.lib.gui.modular.ModularGui;
+import codechicken.lib.gui.modular.ModularGuiContainer;
+import codechicken.lib.gui.modular.elements.GuiElement;
+import codechicken.lib.gui.modular.elements.GuiManipulable;
+import codechicken.lib.gui.modular.elements.GuiSlots;
+import codechicken.lib.gui.modular.elements.GuiSlots.Player;
+import codechicken.lib.gui.modular.elements.GuiTexture;
+import codechicken.lib.gui.modular.lib.Constraints;
+import codechicken.lib.gui.modular.lib.container.ContainerGuiProvider;
+import codechicken.lib.gui.modular.lib.container.ContainerScreenAccess;
+import codechicken.lib.gui.modular.lib.geometry.Direction;
 import net.foxmcloud.draconicadditions.DraconicAdditions;
-import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosInfuser;
-import net.foxmcloud.draconicadditions.inventory.ContainerDATile;
-import net.minecraft.client.resources.language.I18n;
+import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosHolderBase;
+import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class GUIChaosInfuser extends ModularGuiContainer<ContainerDATile<TileChaosInfuser>> {
-	private TileChaosInfuser tile;
-	private final String GUITranslation;
-	protected GuiToolkit<GUIChaosInfuser> toolkit;
+public class GUIChaosInfuser extends ContainerGuiProvider<ChaosInfuserMenu> {
+    private static final GuiToolkit TOOLKIT = new GuiToolkit("gui." + DraconicAdditions.MODID + ".chaos_infuser");
+    public static final int GUI_WIDTH = 176;
+    public static final int GUI_HEIGHT = 166;
 
-	public GUIChaosInfuser(ContainerDATile<TileChaosInfuser> container, Inventory inv, Component title) {
-		super(container, inv, title);
-		this.tile = container.tile;
-		GUITranslation = "gui." + DraconicAdditions.MODID + "." + tile.getBlockState().getBlock().getRegistryName().getPath();
-		toolkit = new GuiToolkit<>(this, 200, 170).setTranslationPrefix(GUITranslation);
-	}
+    @Override
+    public GuiElement<?> createRootElement(ModularGui gui) {
+        GuiManipulable root = new GuiManipulable(gui).addMoveHandle(3).enableCursors(true);
+        GuiTexture bg = new GuiTexture(root.getContentElement(), DEGuiTextures.themedGetter("generator"));
+        Constraints.bind(bg, root.getContentElement());
+        return root;
+    }
 
-	@Override
-	public void addElements(GuiElementManager manager) {
-		TBasicMachine template = new TModularMachine(this, tile, false);
-		template.background = GuiTexture.newDynamicTexture(xSize(), ySize(), () -> BCGuiSprites.getThemed("background_dynamic"));
-		template.background.onReload(guiTex -> guiTex.setPos(guiLeft(), guiTop()));
-		toolkit.loadTemplate(template);
-		template.playerSlots = toolkit.createPlayerSlots(template.background, false);
-		toolkit.placeInside(template.playerSlots, template.background, LayoutPos.BOTTOM_CENTER, 0, -7);
-		GuiElement chaosSlot = toolkit.createSlot(template.background, container.getSlotLayout().getSlotData(ContainerSlotLayout.SlotType.TILE_INV, 0), null, false);
-		toolkit.placeOutside(chaosSlot, template.playerSlots, LayoutPos.TOP_CENTER, 0, -template.background.ySize() / 6);
-		chaosSlot.setHoverText(I18n.get(GUITranslation + ".chaosSlot.hover"));
-		chaosSlot.setHoverTextEnabled(tile.itemHandler.getStackInSlot(0).isEmpty());
-		GuiLabel chaosText = toolkit.createHeading("", template.background, true);
-		chaosText.setYPos(guiTop() + 14);
-		chaosText.setDisplaySupplier(() -> I18n.get("info.da.storedChaos", tile.chaos.get(), tile.getMaxChaos()));
-		template.addEnergyBar(tile.opStorage, false);
-		template.addEnergyItemSlot(true, container.getSlotLayout().getSlotData(ContainerSlotLayout.SlotType.TILE_INV, 1));
-	}
+    @Override
+    public void buildGui(ModularGui gui, ContainerScreenAccess<ChaosInfuserMenu> screenAccess) {
+        gui.initStandardGui(GUI_WIDTH, GUI_HEIGHT);
+        ChaosInfuserMenu menu = screenAccess.getMenu();
+        TileChaosHolderBase tile = menu.tile;
+        GuiElement<?> root = gui.getRoot();
+        TOOLKIT.createHeading(root, gui.getGuiTitle(), true);
+
+        ButtonRow buttonRow = ButtonRow.topRightInside(root, Direction.DOWN, 3, 3).setSpacing(1);
+        buttonRow.addButton(e -> TOOLKIT.createThemeButton(e));
+        buttonRow.addButton(e -> TOOLKIT.createRSSwitch(e, screenAccess.getMenu().tile));
+
+        GuiSlots inv = new GuiSlots(root, screenAccess, menu.slot, 1).setSlotTexture(slot -> BCGuiTextures.getThemed("slot"));
+        Constraints.placeInside(inv, root, Constraints.LayoutPos.TOP_CENTER, 0, 32);
+
+        Player playInv = GuiSlots.player(root, screenAccess, menu.main, menu.hotBar);
+        playInv.stream().forEach(e -> e.setSlotTexture(slot -> BCGuiTextures.getThemed("slot")));
+        Constraints.placeInside(playInv.container(), root, Constraints.LayoutPos.BOTTOM_CENTER, 0, -7);
+        TOOLKIT.playerInvTitle(playInv.container());
+
+        GuiSlots capInv = GuiSlots.singleSlot(root, screenAccess, menu.capacitor, 0)
+                .setSlotTexture(slot -> BCGuiTextures.getThemed("slot"))
+                .setEmptyIcon(BCGuiTextures.get("slots/energy"));
+
+        //Energy Bar
+        var energyBar = TOOLKIT.createEnergyBar(root, tile.opStorage);
+        energyBar.container()
+                .constrain(TOP, relative(root.get(TOP), 6))
+                .constrain(BOTTOM, relative(playInv.container().get(TOP), -14))
+                .constrain(LEFT, match(playInv.container().get(LEFT)))
+                .constrain(WIDTH, literal(14));
+        Constraints.placeInside(capInv, energyBar.container(), Constraints.LayoutPos.BOTTOM_RIGHT, 20, 0);
+        Constraints.placeOutside(TOOLKIT.energySlotArrow(root, true, false), capInv, Constraints.LayoutPos.TOP_CENTER, -2, -2);
+    }
+
+    public static class Screen extends ModularGuiContainer<ChaosInfuserMenu> {
+        public Screen(ChaosInfuserMenu menu, Inventory inv, Component title) {
+            super(menu, inv, new GUIChaosInfuser());
+            getModularGui().setGuiTitle(title);
+        }
+    }
 }

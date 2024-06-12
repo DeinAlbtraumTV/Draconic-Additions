@@ -1,15 +1,25 @@
 package net.foxmcloud.draconicadditions;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.brandon3055.brandonscore.BrandonsCore;
+import com.brandon3055.brandonscore.utils.LogHelperBC;
+import com.brandon3055.draconicevolution.DraconicEvolution;
+import com.brandon3055.draconicevolution.utils.LogHelper;
+
+import net.foxmcloud.draconicadditions.handlers.DAEventHandler;
+import net.foxmcloud.draconicadditions.integration.AE2Compat;
+import net.foxmcloud.draconicadditions.lib.DAContent;
+import net.foxmcloud.draconicadditions.lib.DACreativeTabs;
+import net.foxmcloud.draconicadditions.lib.DAModules;
+import net.foxmcloud.draconicadditions.lib.DASounds;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(DraconicAdditions.MODID)
 public class DraconicAdditions {
@@ -19,26 +29,48 @@ public class DraconicAdditions {
 	public static final String MODID_PREFIX = MODID + ":";
 
 	public static Logger logger = LogManager.getLogger(DraconicAdditions.MODID);
-	public static CommonProxy proxy;
 
 	public DraconicAdditions() {
-		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-		proxy.construct();
-		FMLJavaModLoadingContext.get().getModEventBus().register(this);
+		runChecks();
+		DAConfig.load();
+		DAContent.init();
+		DAModules.init();
+		DASounds.init();
+		DACreativeTabs.init();
+		AE2Compat.init();
+		MinecraftForge.EVENT_BUS.register(new DAEventHandler());
+		//FusionCostMultiplier.init();
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientInit::init);
 	}
-
-	@SubscribeEvent
-	public void onCommonSetup(FMLCommonSetupEvent event) {
-		proxy.commonSetup(event);
-	}
-
-	@SubscribeEvent
-	public void onClientSetup(FMLClientSetupEvent event) {
-		proxy.clientSetup(event);
-	}
-
-	@SubscribeEvent
-	public void onServerSetup(FMLDedicatedServerSetupEvent event) {
-		proxy.serverSetup(event);
+	
+	@SuppressWarnings("deprecation")
+	private static void runChecks() {
+		if (ModList.get().isLoaded("draconicevolution")) {
+			DraconicAdditions.logger.log(Level.INFO, "Hey, Brandon's Core!  How's it going?");
+			BrandonsCore.LOGGER.log(Level.INFO, "Oh hey, doin good. just looking for DE.");
+			DraconicAdditions.logger.log(Level.INFO, "Yeah, just finished talking to them.  They're through the door behind me.  Speaking of locating mods, have you seen Curios?");
+			if (ModList.get().isLoaded("curios")) {
+				BrandonsCore.LOGGER.log(Level.INFO, "Yup, just go up and to the left a bit, cant miss it");
+				DraconicAdditions.logger.log(Level.INFO, "Thanks!  Just be careful, DE seems a bit...  Unstable.");
+				BrandonsCore.LOGGER.log(Level.INFO, "Sure sure....");
+			}
+			else {
+				BrandonsCore.LOGGER.log(Level.INFO, "Why should i know that?");
+				DraconicEvolution.LOGGER.log(Level.WARN, "Calculating explosion ETA");
+				BrandonsCore.LOGGER.log(Level.INFO, "DE? What are you, ahh... NO... NONONO! DONT DO THAT!!! STOP THIS NOW!");
+				DraconicEvolution.LOGGER.log(Level.WARN, "**Explosion Imminent!!!**");
+				DraconicAdditions.logger.log(Level.ERROR, "Brandon, WHAT HAVE YOU DONE?!");
+				throw new Error("Curios is not loaded.  It is required for Draconic Additions to work.");
+			}
+		}
+		else {
+			DraconicAdditions.logger.log(Level.INFO, "Hey, Brandon's Core!  How's it going?  Just looking for Draconic Evolution.  Seen 'em around?");
+			BrandonsCore.LOGGER.log(Level.INFO, "No but at least we wont literally die from his explosions.");
+			DraconicAdditions.logger.log(Level.WARN, "Wait, really?  He's not here?!");
+			BrandonsCore.LOGGER.log(Level.INFO, "Not my problem.");
+			DraconicAdditions.logger.log(Level.ERROR, "But...  But...  I can't do my job if he doesn't show up!");
+			BrandonsCore.LOGGER.log(Level.INFO, "Sorry man cant help you there.");
+			throw new Error("Draconic Evolution is not loaded.  It is required for Draconic Additions to work.");
+		}
 	}
 }

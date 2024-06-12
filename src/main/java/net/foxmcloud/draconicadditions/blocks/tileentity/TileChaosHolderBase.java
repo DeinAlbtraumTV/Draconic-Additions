@@ -4,6 +4,7 @@ import com.brandon3055.brandonscore.api.TechLevel;
 import com.brandon3055.brandonscore.api.power.OPStorage;
 import com.brandon3055.brandonscore.blocks.TileBCore;
 import com.brandon3055.brandonscore.inventory.TileItemStackHandler;
+import com.brandon3055.brandonscore.lib.IRSSwitchable;
 import com.brandon3055.brandonscore.lib.datamanager.DataFlags;
 import com.brandon3055.brandonscore.lib.datamanager.ManagedInt;
 import com.brandon3055.draconicevolution.api.capability.DECapabilities;
@@ -18,7 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileChaosHolderBase extends TileBCore {
+public abstract class TileChaosHolderBase extends TileBCore implements IRSSwitchable {
 	public OPStorage opStorage;
 	public TileItemStackHandler itemHandler;
 
@@ -30,7 +31,7 @@ public class TileChaosHolderBase extends TileBCore {
 		return moduleHost.getModuleData(ModuleTypes.SHIELD_BOOST, new ShieldData(0, 0)).shieldCapacity() * 10;
 	}
 
-	public boolean canRemoveModule(ModuleEntity entity) {
+	public boolean canRemoveModule(ModuleEntity<?> entity) {
 		return !(entity.getModule().getData() instanceof ShieldData data && getMaxChaos() - data.shieldCapacity() * 10 < chaos.get());
 	}
 
