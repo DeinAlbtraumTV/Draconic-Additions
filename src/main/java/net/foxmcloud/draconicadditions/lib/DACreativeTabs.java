@@ -28,24 +28,7 @@ public class DACreativeTabs extends DECreativeTabs {
 
     private static void registerTabs(RegisterEvent event) {
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
-            List<ItemStack> blocksIcons = new ArrayList<>();
-            List<ItemStack> itemsIcons = new ArrayList<>();
-            helper.register(new ResourceLocation(DraconicAdditions.MODID, "blocks"), CreativeModeTab.builder().title(Component.translatable("itemGroup.draconicadditions.blocks"))
-                            .displayItems((params, output) -> {
-                                for (ResourceLocation key : ForgeRegistries.BLOCKS.getKeys()) {
-                                    if (key.getNamespace().equals(DraconicAdditions.MODID)) {
-                                        Block block = ForgeRegistries.BLOCKS.getValue(key);
-                                        if (block instanceof CustomTabHandling || block == null) continue;
-                                        output.accept(block.asItem());
-                                        blocksIcons.add(new ItemStack(block));
-                                    }
-                                }
-                            })
-                            .withTabFactory(builder -> new CyclingTab(builder, blocksIcons))
-
-                            .build()
-            );
-
+            List<ItemStack> icons = new ArrayList<>();
             helper.register(new ResourceLocation(DraconicAdditions.MODID, "items"), CreativeModeTab.builder().title(Component.translatable("itemGroup.draconicadditions.items"))
                             .displayItems((params, output) -> {
                                 for (ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
@@ -53,11 +36,11 @@ public class DACreativeTabs extends DECreativeTabs {
                                         Item item = ForgeRegistries.ITEMS.getValue(key);
                                         if (item instanceof CustomTabHandling || item == null) continue;
                                         output.accept(item);
-                                        itemsIcons.add(new ItemStack(item));
+                                        icons.add(new ItemStack(item));
                                     }
                                 }
                             })
-                            .withTabFactory(builder -> new CyclingTab(builder, itemsIcons))
+                            .withTabFactory(builder -> new CyclingTab(builder, icons))
                             .build()
             );
         });
