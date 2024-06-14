@@ -55,12 +55,8 @@ minecraft {
 repositories {
 	mavenLocal()
 	maven { url = "https://maven.covers1624.net/" }
-	maven { url = "https://dvs1.progwml6.com/files/maven" }
-	maven { url = "https://maven.cil.li/" }
-	maven { url = "https://maven.theillusivec4.top/" }
-	maven { url = "https://squiddev.cc/maven/" }
 	maven { url = "https://maven.blamejared.com/" }
-	maven { url = "https://modmaven.dev/" }
+	maven { url = "https://maven.theillusivec4.top/" }
 }
 
 dependencies {
