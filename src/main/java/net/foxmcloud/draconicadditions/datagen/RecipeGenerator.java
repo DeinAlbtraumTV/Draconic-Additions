@@ -228,6 +228,47 @@ public class RecipeGenerator extends RecipeProvider {
 				.key('S', DEModules.DRACONIC_SPEED.get().getItem())
 				.key('D', draconicTickAccel.get().getItem());
 		}
+		
+		if (semiStableChaos != null) {
+			shapedRecipe(semiStableChaos.get().getItem(), "modules")
+				.patternLine("CRC")
+				.patternLine("SHS")
+				.patternLine("CRC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('S', DEModules.DRACONIC_SHIELD_CAPACITY.get().getItem())
+				.key('R', DEModules.DRACONIC_SHIELD_RECOVERY.get().getItem())
+				.key('H', DEContent.DRAGON_HEART);
+		}
+		
+		if (stableChaos != null) {
+			shapedRecipe(stableChaos.get().getItem(), "modules")
+				.patternLine("CRC")
+				.patternLine("RHR")
+				.patternLine("CRC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('R', DEModules.DRACONIC_SHIELD_RECOVERY.get().getItem())
+				.key('H', DEContent.DRAGON_HEART);
+		}
+		
+		if (unstableChaos != null) {
+			shapedRecipe(unstableChaos.get().getItem(), "modules")
+				.patternLine("CSC")
+				.patternLine("SHS")
+				.patternLine("CSC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('S', DEModules.DRACONIC_SHIELD_CAPACITY.get().getItem())
+				.key('H', DEContent.DRAGON_HEART);
+		}
+		
+		if (chaosInjector != null) {
+			shapedRecipe(chaosInjector.get().getItem(), "modules")
+				.patternLine("CGC")
+				.patternLine("GMG")
+				.patternLine("CGC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('G', Items.GLASS)
+				.key('M', DEContent.MODULE_CORE);
+		}
 	}
 
 	public static class NBTIngredient extends StrictNBTIngredient {
