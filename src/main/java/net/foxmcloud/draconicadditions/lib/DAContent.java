@@ -83,7 +83,7 @@ public class DAContent {
 
 	// Tools
 
-	public static final RegistryObject<ChaosContainer> chaosContainer = ITEMS.register("chaos_container",        () -> new ChaosContainer(DEContent.CHAOTIC_TOOLS));
+	public static final RegistryObject<ChaosContainer> chaosContainer = ITEMS.register("chaos_container", () -> new ChaosContainer(DEContent.CHAOTIC_TOOLS));
 
 	// Curios
 

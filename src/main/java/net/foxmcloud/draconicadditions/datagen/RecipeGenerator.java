@@ -45,7 +45,6 @@ public class RecipeGenerator extends RecipeProvider {
 				.catalyst(DEContent.CRAFTING_CORE.get())
 				.energy(2500000)
 				.techLevel(TechLevel.CHAOTIC)
-				.ingredient(chaosHeart)
 				.ingredient(chaosContainer);
 		}
 		
@@ -195,6 +194,15 @@ public class RecipeGenerator extends RecipeProvider {
 				.key('H', harnessDraconic)
 				.key('S', DEModules.CHAOTIC_SHIELD_CONTROL.get().getItem());
 		}
+		
+		if (hermal != null) {
+			shapedRecipe(hermal, "items")
+				.patternLine("CCC")
+				.patternLine("CPC")
+				.patternLine("CCC")
+				.key('C', DEContent.CHAOS_FRAG_MEDIUM.get())
+				.key('P', Items.POISONOUS_POTATO);
+		}
 	}
 	
 	private void modules() {
@@ -234,7 +242,7 @@ public class RecipeGenerator extends RecipeProvider {
 				.patternLine("CRC")
 				.patternLine("SHS")
 				.patternLine("CRC")
-				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('C', DEContent.CHAOS_FRAG_LARGE)
 				.key('S', DEModules.DRACONIC_SHIELD_CAPACITY.get().getItem())
 				.key('R', DEModules.DRACONIC_SHIELD_RECOVERY.get().getItem())
 				.key('H', DEContent.DRAGON_HEART);
@@ -245,7 +253,7 @@ public class RecipeGenerator extends RecipeProvider {
 				.patternLine("CRC")
 				.patternLine("RHR")
 				.patternLine("CRC")
-				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('C', DEContent.CHAOS_FRAG_LARGE)
 				.key('R', DEModules.DRACONIC_SHIELD_RECOVERY.get().getItem())
 				.key('H', DEContent.DRAGON_HEART);
 		}
@@ -255,7 +263,7 @@ public class RecipeGenerator extends RecipeProvider {
 				.patternLine("CSC")
 				.patternLine("SHS")
 				.patternLine("CSC")
-				.key('C', DEContent.CHAOS_FRAG_MEDIUM)
+				.key('C', DEContent.CHAOS_FRAG_LARGE)
 				.key('S', DEModules.DRACONIC_SHIELD_CAPACITY.get().getItem())
 				.key('H', DEContent.DRAGON_HEART);
 		}

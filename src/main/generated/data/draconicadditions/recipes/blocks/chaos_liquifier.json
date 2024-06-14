@@ -5,9 +5,6 @@
   },
   "ingredients": [
     {
-      "item": "draconicadditions:chaos_heart"
-    },
-    {
       "item": "draconicadditions:chaos_container"
     }
   ],
