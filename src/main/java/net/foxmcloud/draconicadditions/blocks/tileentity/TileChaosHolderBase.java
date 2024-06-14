@@ -16,6 +16,7 @@ import com.brandon3055.draconicevolution.api.modules.lib.SimpleModuleHost;
 import com.brandon3055.draconicevolution.init.ModuleCfg;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -38,5 +39,9 @@ public abstract class TileChaosHolderBase extends TileBCore implements IRSSwitch
 	public TileChaosHolderBase(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 		capManager.setManaged("module_host", DECapabilities.MODULE_HOST_CAPABILITY, moduleHost).saveBoth().syncContainer();
+	}
+	
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return true;
 	}
 }

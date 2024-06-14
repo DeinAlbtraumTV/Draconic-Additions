@@ -23,7 +23,7 @@ public class LangGenerator extends LanguageProvider {
 
 	private void blocks(PrefixHelper helper) {
 		helper.add(DAContent.chaosLiquifier.get(), "Chaos Liquifier");
-		helper.add(DAContent.chaosInfuser.get(), "Chaos Infuser");
+		helper.add(DAContent.chaosInfuser.get(),   "Chaos Infuser");
 	}
 
 	private void items(PrefixHelper helper) {
@@ -78,8 +78,8 @@ public class LangGenerator extends LanguageProvider {
 
 	private void gui(PrefixHelper helper) {
 		helper.setPrefix("gui." + DraconicAdditions.MODID);
-		helper.add("chaos_liquefier", "Chaos Liquefier");
-		helper.add("chaos_liquefier.chaosSlot.hover", "Accepts Chaos Shards and Chaos Hearts.");
+		helper.add("chaos_liquifier", "Chaos Liquifier");
+		helper.add("chaos_liquifier.chaosSlot.hover", "Accepts Chaos Shards and Chaos Hearts.");
 		helper.add("chaos_infuser", "Chaos Infuser");
 		helper.add("chaos_infuser.chaosSlot.hover", "Accepts any modular item with a Chaos Stabilizer Module.");
 	}
@@ -88,6 +88,7 @@ public class LangGenerator extends LanguageProvider {
 		helper.setPrefix("info.da");
 		helper.add("storedChaos", "Stored Chaos: %s / %s mB");
 		helper.add("maxChaos", "Max Chaos: %s B");
+		helper.add("maxChaosInfo", "Accepts shield modules.");
 		helper.add("chaos.noShield", "The Chaos Container requires shield boosting modules to operate.");
 		helper.add("chaos.xfer.to", "Transferred %s mB to %s");
 		helper.add("chaos.xfer.from", "Transferred %s mB from %s");

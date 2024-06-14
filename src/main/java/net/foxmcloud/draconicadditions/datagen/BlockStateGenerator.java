@@ -33,13 +33,6 @@ public class BlockStateGenerator extends BlockStateProvider {
 		simpleBlock(DAContent.chaosInfuser.get(), models().cubeBottomTop("chaos_infuser", modLoc("block/chaos_infuser_front"), machineTop, machineTop));
 	}
 
-	private void dummyBlock(Block block) {
-		ModelFile model = models()//
-				.withExistingParent("dummy", "block")//
-				.texture("particle", "minecraft:block/glass");
-		simpleBlock(block, model);
-	}
-
 	public void directionalFromNorth(Block block, ModelFile model) {
 		directionalFromNorth(block, model, 180);
 	}

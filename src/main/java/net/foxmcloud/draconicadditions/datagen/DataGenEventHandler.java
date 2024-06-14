@@ -38,7 +38,6 @@ public class DataGenEventHandler {
 			gen.addProvider(true, new RecipeGenerator(gen.getPackOutput()));
 			gen.addProvider(event.includeServer(), new LootTableProvider(event.getGenerator().getPackOutput(), Set.of(), List.of(new LootTableProvider.SubProviderEntry(BlockLootProvider::new, LootContextParamSets.BLOCK))));
 
-
 			BlockTagGenerator blockGenerator = new BlockTagGenerator(gen.getPackOutput(), event.getLookupProvider(), DraconicAdditions.MODID, event.getExistingFileHelper());
 			gen.addProvider(true, blockGenerator);
 			gen.addProvider(true, new ItemTagGenerator(gen.getPackOutput(), event.getLookupProvider(), blockGenerator.contentsGetter(), DraconicAdditions.MODID, event.getExistingFileHelper()));

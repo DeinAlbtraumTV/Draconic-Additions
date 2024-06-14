@@ -110,6 +110,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 		}
 	}
 
+	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		if (index == 1) {
 			return EnergyUtils.isEnergyItem(stack);

@@ -163,6 +163,7 @@ public class TileChaosLiquifier extends TileChaosHolderBase implements IChangeLi
 		else return 0;
 	}
 
+	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return index == 1 ? EnergyUtils.isEnergyItem(stack) : chaosID(stack.getItem()) > 0;
 	}

@@ -10,6 +10,7 @@ import net.foxmcloud.draconicadditions.blocks.machines.ChaosInfuser;
 import net.foxmcloud.draconicadditions.blocks.machines.ChaosLiquifier;
 import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosInfuser;
 import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosLiquifier;
+import net.foxmcloud.draconicadditions.inventory.ChaosBaseMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosLiquifierMenu;
 import net.foxmcloud.draconicadditions.items.Hermal;
@@ -61,8 +62,8 @@ public class DAContent {
 	public static final RegistryObject<BlockEntityType<TileChaosLiquifier>> tileChaosLiquifier = TILES_ENTITIES.register("chaos_liquifier", () -> BlockEntityType.Builder.of(TileChaosLiquifier::new, chaosLiquifier.get()).build(null));
 	public static final RegistryObject<BlockEntityType<TileChaosInfuser>> tileChaosInfuser = TILES_ENTITIES.register("chaos_infuser", () -> BlockEntityType.Builder.of(TileChaosInfuser::new, chaosInfuser.get()).build(null));
 
-	public static final RegistryObject<MenuType<ChaosLiquifierMenu>> menuChaosLiquifier = MENU_TYPES.register("chaos_liquifier", () -> IForgeMenuType.create(ChaosLiquifierMenu::new));
-	public static final RegistryObject<MenuType<ChaosInfuserMenu>> menuChaosInfuser = MENU_TYPES.register("chaos_infuser", () -> IForgeMenuType.create(ChaosInfuserMenu::new));
+	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosLiquifier = MENU_TYPES.register("chaos_liquifier", () -> IForgeMenuType.create(ChaosLiquifierMenu::new));
+	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosInfuser = MENU_TYPES.register("chaos_infuser", () -> IForgeMenuType.create(ChaosInfuserMenu::new));
 
 	// Crafting Components
 
