@@ -22,7 +22,7 @@ import com.brandon3055.draconicevolution.items.equipment.IModularItem;
 import com.brandon3055.draconicevolution.network.DraconicNetwork;
 
 import net.foxmcloud.draconicadditions.lib.DADamage;
-import net.foxmcloud.draconicadditions.modules.ModuleTypes;
+import net.foxmcloud.draconicadditions.modules.DAModuleTypes;
 import net.foxmcloud.draconicadditions.modules.data.ChaosInjectorData;
 import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
 import net.minecraft.ChatFormatting;
@@ -119,7 +119,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 						modifyChaos(-1);
 					}
 					else if (entity instanceof ServerPlayer player) {
-						StableChaosData allData = host.getModuleData(ModuleTypes.STABLE_CHAOS);
+						StableChaosData allData = host.getModuleData(DAModuleTypes.STABLE_CHAOS);
 						player.displayClientMessage(allData != null && allData.getMaxChaos() > 0 ? Component.translatable("info.da.chaos_injector.storageFull").withStyle(ChatFormatting.RED) : Component.translatable("info.da.chaos_injector.noStorage").withStyle(ChatFormatting.RED), true);
 					}
 					else if (entity instanceof Player player) {
@@ -254,9 +254,9 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 	// Returns the amount successfully pushed/pulled to/from chaos storage modules.  Positive values push, negative values pull.
 	private int modifyChaosInStorage(int amount) {
 		int chaosToModify = amount;
-		StableChaosData allData = host.getModuleData(ModuleTypes.STABLE_CHAOS);
+		StableChaosData allData = host.getModuleData(DAModuleTypes.STABLE_CHAOS);
 		if (allData != null && allData.getMaxChaos() > 0) {
-			Stream<ModuleEntity<?>> chaosEntities = host.getEntitiesByType(ModuleTypes.STABLE_CHAOS);
+			Stream<ModuleEntity<?>> chaosEntities = host.getEntitiesByType(DAModuleTypes.STABLE_CHAOS);
 			ArrayList<StableChaosEntity> sortedChaosEntities = StableChaosEntity.getSortedListFromStream(chaosEntities);
 			for (StableChaosEntity ce : sortedChaosEntities) {
 				StableChaosData data = (StableChaosData)ce.getModule().getData();
@@ -375,7 +375,7 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 				continue;
 			}
 			ModuleHost host = cap.orElseThrow(IllegalStateException::new);
-			ArrayList<ChaosInjectorEntity> entities = getSortedListFromStream(host.getEntitiesByType(ModuleTypes.CHAOS_INJECTOR));
+			ArrayList<ChaosInjectorEntity> entities = getSortedListFromStream(host.getEntitiesByType(DAModuleTypes.CHAOS_INJECTOR));
 			if (entities.isEmpty()) {
 				continue;
 			}

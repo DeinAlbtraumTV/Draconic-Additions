@@ -9,7 +9,7 @@ import com.brandon3055.draconicevolution.api.modules.ModuleType;
 import net.foxmcloud.draconicadditions.DraconicAdditions;
 import net.foxmcloud.draconicadditions.lib.DAContent;
 import net.foxmcloud.draconicadditions.lib.DAModules;
-import net.foxmcloud.draconicadditions.modules.ModuleTypes;
+import net.foxmcloud.draconicadditions.modules.DAModuleTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
@@ -33,10 +33,10 @@ public class LangGenerator extends LanguageProvider {
 		helper.add(DAContent.inertPotatoChest.get(),   "Inert Potato Chestplate");
 		helper.add(DAContent.inertPotatoLegs.get(),    "Inert Potato Leggings");
 		helper.add(DAContent.inertPotatoBoots.get(),   "Inert Potato Boots");
-		//helper.add(DAContent.infusedPotatoHelm.get(),  "Infused Potato Helmet");
-		//helper.add(DAContent.infusedPotatoChest.get(), "Infused Potato Chestplate");
-		//helper.add(DAContent.infusedPotatoLegs.get(),  "Infused Potato Leggings");
-		//helper.add(DAContent.infusedPotatoBoots.get(), "Infused Potato Boots");
+		helper.add(DAContent.infusedPotatoHelm.get(),  "Infused Potato Helmet");
+		helper.add(DAContent.infusedPotatoChest.get(), "Infused Potato Chestplate");
+		helper.add(DAContent.infusedPotatoLegs.get(),  "Infused Potato Leggings");
+		helper.add(DAContent.infusedPotatoBoots.get(), "Infused Potato Boots");
 		helper.add(DAContent.chaosContainer.get(),     "Chaos Container");
 		helper.add(DAContent.necklaceWyvern.get(),     "Wyvern Necklace");
 		helper.add(DAContent.necklaceDraconic.get(),   "Draconic Necklace");
@@ -50,19 +50,18 @@ public class LangGenerator extends LanguageProvider {
 
 	private void itemGroups(PrefixHelper helper) {
 		helper.setPrefix("itemGroup." + DraconicAdditions.MODID);
-		helper.add("items",   "Draconic Additions");
-		helper.add("modules", "Draconic Additions Modules");
+		helper.add("items", "Draconic Additions");
 	}
 
 	private void modules(PrefixHelper helper) {
 		helper.setPrefix("module." + DraconicAdditions.MODID);
 		helper.add(DAModules.chaoticAutoFeed.get(),   "Chaotic Auto Feed Module");
-		helper.add(ModuleTypes.TICK_ACCEL,            "Tick Accelerator");
+		helper.add(DAModuleTypes.TICK_ACCEL,          "Tick Accelerator");
 		helper.add(DAModules.draconicTickAccel.get(), "Draconic Tick Accelerator");
 		helper.add(DAModules.chaoticTickAccel.get(),  "Chaotic Tick Accelerator");
 		helper.add("tick_accel.name",                 "Additional Ticks");
 		helper.add("tick_accel.value",                "%s Ticks");
-		helper.add(ModuleTypes.STABLE_CHAOS,          "Chaos Stabilizer");
+		helper.add(DAModuleTypes.STABLE_CHAOS,        "Chaos Stabilizer");
 		helper.add(DAModules.semiStableChaos.get(),   "Semi-Stable Chaos Holder");
 		helper.add(DAModules.stableChaos.get(),       "Stable Chaos Holder");
 		helper.add(DAModules.unstableChaos.get(),     "Unstable Chaos Holder");
@@ -70,7 +69,7 @@ public class LangGenerator extends LanguageProvider {
 		helper.add("maxChaos.value",                  "%s mB");
 		helper.add("maxInstability.name",             "Instability");
 		helper.add("maxInstability.value",            "%s%%");
-		helper.add(ModuleTypes.CHAOS_INJECTOR,        "Chaos Injection System");
+		helper.add(DAModuleTypes.CHAOS_INJECTOR,      "Chaos Injection System");
 		helper.add(DAModules.chaosInjector.get(),     "Chaos Injector");
 		helper.add("chaos_injector.name",             "Rate of Injection");
 		helper.add("chaos_injector.value",            "%s Hearts");
@@ -107,10 +106,11 @@ public class LangGenerator extends LanguageProvider {
 		helper.add("hermal.craft", "Ultimate power in something so seemingly mundane.");
 		helper.add("hermal.eat.attempt", "This seems like a bad idea...");
 		helper.add("hermal.eat.success", "No one contests the power of hermal.");
+		helper.add("infusedArmor.break", "Your %s breaks apart as the last of the energy reserves give out!");
 		helper.add("instability", "Current Instability: %s%%");
 		helper.add("modular_harness.cantmove", "This block doesn't seem to budge...");
-		helper.add("modular_harness.storeSuccess", "You place the machine into your harness.");
-		helper.add("modular_harness.placeSuccess", "You take the machine off of your harness and set it back down.");
+		helper.add("modular_harness.storeSuccess", "You place the %s into your harness.");
+		helper.add("modular_harness.placeSuccess", "You take the %s off of your harness and set it back down.");
 		helper.add("modular_harness.storedBlock", "Currently Stored: ");
 		helper.add("opCost", "OP Cost: %s OP/t");
 	}

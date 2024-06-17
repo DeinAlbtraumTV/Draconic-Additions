@@ -27,12 +27,17 @@ public class DAConfig extends DEConfig {
 	}
 
 	public static String serverID;
+	
+	// Armor
+	
+	public static double infusedCapacityMultiplier = 1;
 
 	// Curios
 
 	public static double necklaceCapacityMultiplier = 1;
 	public static double harnessCapacityMultiplier = 1;
-	public static boolean harnessTickOutOfCuriosSlot = true;
+	public static boolean harnessTickInCuriosSlot = false;
+	public static boolean harnessTickOutOfCuriosSlot = false;
 
 	// Tools
 
@@ -64,6 +69,15 @@ public class DAConfig extends DEConfig {
 				.setComment("This is a randomly generated ID that clients will use to map config settings from this server.")
 				.setDefaultString(UUID.randomUUID().toString());
 		serverIDTag.onSync((tag, type) -> serverID = tag.getString());
+		
+		// Armor
+
+		ConfigCategory armorTweaks = serverTag.getCategory("Armor Tweaks");
+		armorTweaks.setComment("These allow you to tweak the stats of the curios found in this mod.");
+
+		armorTweaks.getValue("infusedCapacityMultiplier").syncTagToClient().setDefaultDouble(1)
+		.setComment("A multiplier to the amount of OP that the Infused Armor can store.")
+		.onSync((tag, type) -> infusedCapacityMultiplier = tag.getDouble());
 
 		// Curios
 
@@ -77,9 +91,13 @@ public class DAConfig extends DEConfig {
 		curiosTweaks.getValue("harnessCapacityMultiplier").syncTagToClient().setDefaultDouble(1)
 		.setComment("A multiplier to the amount of OP that the Modular Harness can store.")
 		.onSync((tag, type) -> harnessCapacityMultiplier = tag.getDouble());
+		
+		curiosTweaks.getValue("harnessTickInCuriosSlot").syncTagToClient().setDefaultBoolean(false)
+		.setComment("Whether to allow the Modular Harness to tick it's stored machine while it's equipped. Note: this item is currently bugged and you WILL corrupt your world if you turn this on.")
+		.onSync((tag, type) -> harnessTickInCuriosSlot = tag.getBoolean());
 
-		curiosTweaks.getValue("harnessTickOutOfCuriosSlot").syncTagToClient().setDefaultBoolean(true)
-		.setComment("Whether to allow the Modular Harness to tick it's stored machine when it's not equipped.")
+		curiosTweaks.getValue("harnessTickOutOfCuriosSlot").syncTagToClient().setDefaultBoolean(false)
+		.setComment("Whether to allow the Modular Harness to tick it's stored machine when it's not equipped. Note: this item is currently bugged and you WILL corrupt your world if you turn this on.")
 		.onSync((tag, type) -> harnessTickOutOfCuriosSlot = tag.getBoolean());
 
 		// Tools

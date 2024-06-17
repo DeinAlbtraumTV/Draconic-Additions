@@ -29,7 +29,7 @@ import com.brandon3055.draconicevolution.integration.equipment.EquipmentManager;
 import net.foxmcloud.draconicadditions.CommonMethods.BlockStorage;
 import net.foxmcloud.draconicadditions.DAConfig;
 import net.foxmcloud.draconicadditions.items.IModularEnergyItem;
-import net.foxmcloud.draconicadditions.modules.ModuleTypes;
+import net.foxmcloud.draconicadditions.modules.DAModuleTypes;
 import net.foxmcloud.draconicadditions.modules.data.TickAccelData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -77,7 +77,7 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 
 	@Override
 	public void handleTick(ItemStack stack, LivingEntity entity, @Nullable EquipmentSlot slot, boolean inEquipModSlot) {
-		boolean validEquipSlot = slot != null ? false : inEquipModSlot;
+		boolean validEquipSlot = slot != null ? false : inEquipModSlot && DAConfig.harnessTickInCuriosSlot;
 		if ((!validEquipSlot && !DAConfig.harnessTickOutOfCuriosSlot) || !hasAttachedBlockEntity(stack, entity.level())) {
 			return;
 		}
@@ -141,10 +141,10 @@ public class ModularHarness extends Item implements IModularEnergyItem, IInvChar
 			if (EquipmentManager.equipModLoaded()) {
 				props.add(new BooleanProperty("charge_" + EquipmentManager.equipModID(), false));
 			}
-			TickAccelData speed = host.getModuleData(ModuleTypes.TICK_ACCEL);
+			TickAccelData speed = host.getModuleData(DAModuleTypes.TICK_ACCEL);
 			if (speed != null) {
 				Supplier<Integer> speedGetter = () -> {
-					TickAccelData data = host.getModuleData(ModuleTypes.TICK_ACCEL);
+					TickAccelData data = host.getModuleData(DAModuleTypes.TICK_ACCEL);
 					return data == null ? 0 : data.getSpeed();
 				};
 				props.add(new IntegerProperty(tickAccelSpeed, speedGetter.get()).min(0).max(speedGetter).setFormatter(IntegerFormatter.RAW));

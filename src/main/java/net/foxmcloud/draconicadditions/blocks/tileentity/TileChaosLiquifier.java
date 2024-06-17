@@ -68,7 +68,7 @@ public class TileChaosLiquifier extends TileChaosHolderBase implements IChangeLi
 		else {
 			active.set(charge.get() > 0);
 			ItemStack stack = itemHandler.getStackInSlot(0);
-			if (!stack.isEmpty() && isItemValidForSlot(0, stack) && chaos.get() <= getMaxChaos() - calcChaos(stack) && isTileEnabled()) {
+			if (isTileEnabled() && !stack.isEmpty() && isItemValidForSlot(0, stack) && chaos.get() <= getMaxChaos() - calcChaos(stack)) {
 				int finalCharge = calcCharge(stack);
 				if (finalCharge != chargeTo.get()) {
 					chargeTo.set(finalCharge);

@@ -6,19 +6,25 @@ import java.util.Arrays;
 import com.brandon3055.draconicevolution.api.capability.DECapabilities;
 import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.event.ModularItemInitEvent;
+import com.brandon3055.draconicevolution.api.modules.ModuleTypes;
+import com.brandon3055.draconicevolution.api.modules.entities.ShieldControlEntity;
+import com.brandon3055.draconicevolution.api.modules.entities.UndyingEntity;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleHostImpl;
 import com.brandon3055.draconicevolution.client.gui.modular.ModularItemGui;
 import com.brandon3055.draconicevolution.client.gui.modular.itemconfig.ConfigurableItemGui;
 import com.brandon3055.draconicevolution.init.DEContent;
+import com.brandon3055.draconicevolution.init.DEDamage;
 import com.brandon3055.draconicevolution.items.equipment.IModularArmor;
+import com.brandon3055.draconicevolution.items.equipment.ModularChestpiece;
 
 import net.covers1624.quack.util.SneakyUtils;
 import net.foxmcloud.draconicadditions.CommonMethods.BlockStorage;
 import net.foxmcloud.draconicadditions.items.IChaosContainer;
+import net.foxmcloud.draconicadditions.items.armor.InfusedPotatoArmor;
 import net.foxmcloud.draconicadditions.items.curios.ModularHarness;
 import net.foxmcloud.draconicadditions.items.tools.ChaosContainer;
 import net.foxmcloud.draconicadditions.lib.DAContent;
-import net.foxmcloud.draconicadditions.modules.ModuleTypes;
+import net.foxmcloud.draconicadditions.modules.DAModuleTypes;
 import net.foxmcloud.draconicadditions.modules.entities.ChaosInjectorEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,6 +33,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -89,14 +97,15 @@ public class DAEventHandler {
 			}
 			Vec2 pRot = player.getRotationVector();
 			Vec2 rotation = new Vec2(-pRot.x, pRot.y + 180);
+			String blockName = ModularHarness.getAttachedName(harness);
 			if (BlockStorage.restoreBlockFromTag(world, abovePos, rotation, harness.getTag(), true, true)) {
-				player.displayClientMessage(Component.translatable("info.da.modular_harness.placeSuccess"), true);
+				player.displayClientMessage(Component.translatable("info.da.modular_harness.placeSuccess", blockName), true);
 				event.setCanceled(true);
 			}
 		}
 		else if (world.getBlockState(event.getPos()).hasBlockEntity()) {
 			if (ModularHarness.storeBlockEntity(world, event.getPos(), harness, player, true)) {
-				player.displayClientMessage(Component.translatable("info.da.modular_harness.storeSuccess"), true);
+				player.displayClientMessage(Component.translatable("info.da.modular_harness.storeSuccess", ModularHarness.getAttachedName(harness)), true);
 			}
 			event.setCanceled(true);
 		}
@@ -172,7 +181,7 @@ public class DAEventHandler {
 				return;
 			}
 			ModuleHost host = cap.orElseThrow(IllegalStateException::new);
-			ArrayList<ChaosInjectorEntity> entities = ChaosInjectorEntity.getSortedListFromStream(host.getEntitiesByType(ModuleTypes.CHAOS_INJECTOR));
+			ArrayList<ChaosInjectorEntity> entities = ChaosInjectorEntity.getSortedListFromStream(host.getEntitiesByType(DAModuleTypes.CHAOS_INJECTOR));
 			if (entities.isEmpty()) {
 				return;
 			}

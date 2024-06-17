@@ -91,7 +91,6 @@ public class RecipeGenerator extends RecipeProvider {
 				.key('P', Items.POTATO);
 		}
 
-		/*
 		if (infusedPotatoHelm != null) {
 			shapedRecipe(infusedPotatoHelm, "items")
 				.patternLine("DRD")
@@ -131,7 +130,6 @@ public class RecipeGenerator extends RecipeProvider {
 				.key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
 				.key('I', inertPotatoBoots);
 		}
-		*/
 
 		if (chaosContainer != null) {
 			fusionRecipe(chaosContainer, "items")

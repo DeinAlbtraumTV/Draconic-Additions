@@ -3,7 +3,7 @@ package net.foxmcloud.draconicadditions.lib;
 import static com.brandon3055.brandonscore.api.TechLevel.*;
 import static com.brandon3055.draconicevolution.api.modules.ModuleTypes.*;
 import static net.foxmcloud.draconicadditions.DAConfig.*;
-import static net.foxmcloud.draconicadditions.modules.ModuleTypes.*;
+import static net.foxmcloud.draconicadditions.modules.DAModuleTypes.*;
 
 import java.util.function.Function;
 

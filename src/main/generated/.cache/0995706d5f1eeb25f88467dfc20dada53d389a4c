@@ -1,4 +1,4 @@
-// 1.20.1	2024-06-12T13:11:39.220637	Draconic Additions Item Models
+// 1.20.1	2024-06-15T18:54:26.0028201	Draconic Additions Item Models
 575bd887718e34811d70be054b3d15a0855fc5d0 assets/draconicadditions/models/item/chaos_container.json
 325414bedb532eac70276ec1c1a4b869bb79eff3 assets/draconicadditions/models/item/chaos_heart.json
 ee50d5b7793bc98f5c0a0a36f3753cdcda5b7087 assets/draconicadditions/models/item/chaos_infuser.json
@@ -12,6 +12,10 @@ f1749bba540757ed1178353a4ca48348bf9c2cc8 assets/draconicadditions/models/item/in
 c53af43b5ba67a527ce7e205536ce9f6ef858efe assets/draconicadditions/models/item/inert_potato_chest.json
 36c3da990a5094ae0bd079f62c0a624bcd5d8494 assets/draconicadditions/models/item/inert_potato_helm.json
 5e3df44a1b60fc4f27129bc593cd38e7741bb823 assets/draconicadditions/models/item/inert_potato_legs.json
+ab1a4e8a1683de418a50be46bff8bd4a76cbce54 assets/draconicadditions/models/item/infused_potato_boots.json
+bd1026a463ed97fbb68199234272c6535e585d64 assets/draconicadditions/models/item/infused_potato_chest.json
+cf7709ece45ee90287e947cf9ee08bc3c5b6b861 assets/draconicadditions/models/item/infused_potato_helm.json
+e7ef99812965d877ea3f42a580dc68b5cda44744 assets/draconicadditions/models/item/infused_potato_legs.json
 0d9e05bcdf5cfcfb19d75071e8731bd03286284e assets/draconicadditions/models/item/item_chaos_injector.json
 da2bb77a1d2de97f7ff1d6eb89a89863dded8781 assets/draconicadditions/models/item/item_chaotic_auto_feed.json
 b48ec9fbc4628426fccd83a984d2b83a079f1401 assets/draconicadditions/models/item/item_chaotic_tick_accel.json

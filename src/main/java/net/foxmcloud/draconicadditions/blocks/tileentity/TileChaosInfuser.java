@@ -20,7 +20,7 @@ import com.brandon3055.draconicevolution.init.DEContent;
 
 import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.foxmcloud.draconicadditions.lib.DAContent;
-import net.foxmcloud.draconicadditions.modules.ModuleTypes;
+import net.foxmcloud.draconicadditions.modules.DAModuleTypes;
 import net.foxmcloud.draconicadditions.modules.data.StableChaosData;
 import net.foxmcloud.draconicadditions.modules.entities.StableChaosEntity;
 import net.minecraft.core.BlockPos;
@@ -68,7 +68,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 		else {
 			ItemStack stack = itemHandler.getStackInSlot(0);
 			int opToTake = chargeRate * rateMultiplier;
-			if (!stack.isEmpty() && isItemValidForSlot(0, stack) && chaos.get() > 0 && opStorage.extractOP(opToTake, true) >= chargeRate) {
+			if (isTileEnabled() && !stack.isEmpty() && isItemValidForSlot(0, stack) && chaos.get() > 0 && opStorage.extractOP(opToTake, true) >= chargeRate) {
 				ModuleHost host = stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY).orElse(null);
 				if (host == null) {
 					opToTake = chargeRate * stack.getCount();
@@ -82,7 +82,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 					active.set(false);
 					return;
 				}
-				Stream<ModuleEntity<?>> chaosEntities = host.getEntitiesByType(ModuleTypes.STABLE_CHAOS);
+				Stream<ModuleEntity<?>> chaosEntities = host.getEntitiesByType(DAModuleTypes.STABLE_CHAOS);
 				ArrayList<StableChaosEntity> sortedChaosEntities = StableChaosEntity.getSortedListFromStream(chaosEntities);
 				if (sortedChaosEntities.size() == 0) {
 					active.set(false);
@@ -118,7 +118,7 @@ public class TileChaosInfuser extends TileChaosHolderBase implements IChangeList
 		else {
 			ModuleHost host = stack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY).orElse(null);
 			if (host != null) {
-				StableChaosData data = host.getModuleData(ModuleTypes.STABLE_CHAOS);
+				StableChaosData data = host.getModuleData(DAModuleTypes.STABLE_CHAOS);
 				return data != null ? data.getMaxChaos() > 0 : false;
 			}
 			else return stack.getItem() == DEContent.DRAGON_HEART.get();

@@ -33,10 +33,10 @@ public class ItemModelGenerator extends ItemModelProvider {
 		simpleItem(DAContent.inertPotatoChest.get());
 		simpleItem(DAContent.inertPotatoLegs.get());
 		simpleItem(DAContent.inertPotatoBoots.get());
-		//simpleArmor(DAContent.infusedPotatoHelm.get());
-		//simpleArmor(DAContent.infusedPotatoChest.get());
-		//simpleArmor(DAContent.infusedPotatoLegs.get());
-		//simpleArmor(DAContent.infusedPotatoBoots.get());
+		simpleArmor(DAContent.infusedPotatoHelm.get());
+		simpleArmor(DAContent.infusedPotatoChest.get());
+		simpleArmor(DAContent.infusedPotatoLegs.get());
+		simpleArmor(DAContent.infusedPotatoBoots.get());
 		simpleItem(DAContent.chaosContainer.get(), "item/tools/animated");
 		simpleCurios(DAContent.necklaceWyvern.get());
 		simpleCurios(DAContent.necklaceDraconic.get());

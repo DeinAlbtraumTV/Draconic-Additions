@@ -14,6 +14,8 @@ import net.foxmcloud.draconicadditions.inventory.ChaosBaseMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosLiquifierMenu;
 import net.foxmcloud.draconicadditions.items.Hermal;
+import net.foxmcloud.draconicadditions.items.armor.InfusedPotatoArmor;
+import net.foxmcloud.draconicadditions.items.armor.InfusedPotatoArmorChest;
 import net.foxmcloud.draconicadditions.items.curios.ModularHarness;
 import net.foxmcloud.draconicadditions.items.curios.ModularNecklace;
 import net.foxmcloud.draconicadditions.items.tools.ChaosContainer;
@@ -76,10 +78,10 @@ public class DAContent {
 
 	// Armor
 
-	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoHelm = ITEMS.register("infused_potato_helm",   () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.HELMET));
-	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoChest = ITEMS.register("infused_potato_chest", () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.CHESTPLATE));
-	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoLegs = ITEMS.register("infused_potato_legs",   () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.LEGGINGS));
-	//public static final RegistryObject<InfusedPotatoArmor> infusedPotatoBoots = ITEMS.register("infused_potato_boots", () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.BOOTS));
+	public static final RegistryObject<InfusedPotatoArmor> infusedPotatoHelm  = ITEMS.register("infused_potato_helm",  () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.HELMET));
+	public static final RegistryObject<InfusedPotatoArmorChest> infusedPotatoChest = ITEMS.register("infused_potato_chest", () -> new InfusedPotatoArmorChest(new Item.Properties()));
+	public static final RegistryObject<InfusedPotatoArmor> infusedPotatoLegs  = ITEMS.register("infused_potato_legs",  () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.LEGGINGS));
+	public static final RegistryObject<InfusedPotatoArmor> infusedPotatoBoots = ITEMS.register("infused_potato_boots", () -> new InfusedPotatoArmor(new Item.Properties(), net.minecraft.world.item.ArmorItem.Type.BOOTS));
 
 	// Tools
 

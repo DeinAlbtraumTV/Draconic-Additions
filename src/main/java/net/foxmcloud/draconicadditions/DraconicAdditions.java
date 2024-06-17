@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import com.brandon3055.brandonscore.BrandonsCore;
 import com.brandon3055.brandonscore.utils.LogHelperBC;
 import com.brandon3055.draconicevolution.DraconicEvolution;
+import com.brandon3055.draconicevolution.api.DraconicAPI;
 import com.brandon3055.draconicevolution.utils.LogHelper;
 
 import net.foxmcloud.draconicadditions.handlers.DAEventHandler;
@@ -32,6 +33,7 @@ public class DraconicAdditions {
 
 	public DraconicAdditions() {
 		runChecks();
+		DraconicAPI.addModuleProvider(MODID);
 		DAConfig.load();
 		DAContent.init();
 		DAModules.init();

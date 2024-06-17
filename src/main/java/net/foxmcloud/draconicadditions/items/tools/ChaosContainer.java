@@ -61,7 +61,6 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 	@Override
 	public ModuleHostImpl createHost(ItemStack stack) {
 		ModuleHostImpl host = IModularEnergyItem.super.createHost(stack);
-		//host.addCategories(CHAOS_CONTAINER);
 		host.addAdditionalType(ModuleTypes.SHIELD_BOOST);
 		return host;
 	}
@@ -76,7 +75,7 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 				Vector3 pos = new Vector3(player.getX(), player.getY(), player.getZ());
 				CommonMethods.explodeEntity(pos, world);
 				player.hurt(DEDamage.chaosImplosion(world), getChaos(stack));
-				player.displayClientMessage(Component.translatable("info.da.chaos.explode"), true);
+				player.displayClientMessage(Component.translatable("info.da.chaos.explode", getName(stack).getString()), true);
 				stack.shrink(1);
 			}
 			else if (shouldAlarm(stack) && hasShielding(stack)) {
