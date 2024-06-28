@@ -1,12 +1,11 @@
 package net.foxmcloud.draconicadditions.lib;
 
-import static com.brandon3055.draconicevolution.DraconicEvolution.MODID;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.foxmcloud.draconicadditions.DraconicAdditions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,7 @@ import net.minecraft.world.level.Level;
 public class DADamage {
 	private static Map<ResourceKey<DamageType>, DamageSource> SOURCES = new HashMap<>();
 
-	public static final ResourceKey<DamageType> injectionDeath = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MODID, "chaosInjection"));
+	public static final ResourceKey<DamageType> injectionDeath = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(DraconicAdditions.MODID, "chaos_injection"));
 
 	public static DamageSource injectionDeath(Level level) {
 		return getSource(level, injectionDeath);
