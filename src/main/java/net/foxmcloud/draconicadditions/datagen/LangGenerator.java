@@ -22,8 +22,10 @@ public class LangGenerator extends LanguageProvider {
 	}
 
 	private void blocks(PrefixHelper helper) {
-		helper.add(DAContent.chaosLiquifier.get(), "Chaos Liquifier");
-		helper.add(DAContent.chaosInfuser.get(),   "Chaos Infuser");
+		helper.add(DAContent.chaosLiquifier.get(),   "Chaos Liquifier");
+		helper.add(DAContent.chaosInfuser.get(),     "Chaos Infuser");
+		helper.add(DAContent.chaosExtractor.get(),   "Chaos Extractor");
+		helper.add(DAContent.chaosCrystalizer.get(), "Chaos Crystalizer");
 	}
 
 	private void items(PrefixHelper helper) {
@@ -78,9 +80,13 @@ public class LangGenerator extends LanguageProvider {
 	private void gui(PrefixHelper helper) {
 		helper.setPrefix("gui." + DraconicAdditions.MODID);
 		helper.add("chaos_liquifier", "Chaos Liquifier");
-		helper.add("chaos_liquifier.chaosSlot.hover", "Accepts Chaos Shards and Chaos Hearts.");
+		helper.add("chaos_liquifier.chaosSlot.hover", "Accepts Chaos Shards.");
 		helper.add("chaos_infuser", "Chaos Infuser");
-		helper.add("chaos_infuser.chaosSlot.hover", "Accepts any modular item with a Chaos Stabilizer Module.");
+		helper.add("chaos_infuser.chaosSlot.hover", "Accepts Dragon Hearts and any modular item with a Chaos Stabilizer Module.");
+		helper.add("chaos_extractor", "Chaos Extractor");
+		helper.add("chaos_extractor.chaosSlot.hover", "Accepts Chaos Hearts and any modular item with a Chaos Stabilizer Module.");
+		helper.add("chaos_crystalizer", "Chaos Crystalizer");
+		helper.add("chaos_crystalizer.chaosSlot.hover", "Chaos Shards will crystalize here when enough LC is present.");
 	}
 
 	private void info(PrefixHelper helper) {
@@ -117,7 +123,7 @@ public class LangGenerator extends LanguageProvider {
 	
 	private void deaths(PrefixHelper helper) {
 		helper.setPrefix("death.attack");
-		helper.add("chaosInjection", "%s exploded in a gory mess when trying to play with powers beyond their control");
+		helper.add("chaos_injection", "%s exploded in a gory mess when trying to play with powers beyond their control");
 	}
 
 	private void itemProps(PrefixHelper helper) {

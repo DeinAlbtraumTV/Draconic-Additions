@@ -17,6 +17,7 @@ import codechicken.lib.datagen.recipe.RecipeProvider;
 import codechicken.lib.datagen.recipe.ShapedRecipeBuilder;
 import codechicken.lib.datagen.recipe.ShapelessRecipeBuilder;
 import net.foxmcloud.draconicadditions.DraconicAdditions;
+import net.foxmcloud.draconicadditions.lib.DAContent;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +55,22 @@ public class RecipeGenerator extends RecipeProvider {
 				.energy(2000000)
 				.techLevel(TechLevel.CHAOTIC)
 				.ingredient(chaosContainer);
+		}
+		
+		if (chaosExtractor != null) {
+			fusionRecipe(itemChaosExtractor, "blocks")
+				.catalyst(itemChaosInfuser)
+				.energy(100000)
+				.techLevel(TechLevel.CHAOTIC)
+				.ingredient(DEContent.ENERGY_TRANSFUSER.get());
+		}
+		
+		if (chaosCrystalizer != null) {
+			fusionRecipe(itemChaosCrystalizer, "blocks")
+				.catalyst(itemChaosLiquifier)
+				.energy(100000)
+				.techLevel(TechLevel.CHAOTIC)
+				.ingredient(DEContent.ENERGY_TRANSFUSER.get());
 		}
 	}
 

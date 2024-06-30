@@ -7,7 +7,6 @@ import com.brandon3055.brandonscore.capability.CapabilityOP;
 import com.brandon3055.brandonscore.inventory.TileItemStackHandler;
 import com.brandon3055.brandonscore.lib.IChangeListener;
 import com.brandon3055.brandonscore.lib.IInteractTile;
-import com.brandon3055.brandonscore.lib.IRSSwitchable;
 import com.brandon3055.brandonscore.lib.datamanager.DataFlags;
 import com.brandon3055.brandonscore.lib.datamanager.ManagedBool;
 import com.brandon3055.brandonscore.utils.EnergyUtils;
@@ -39,16 +38,15 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class TileChaosInfuser extends TileChaosHolderBase implements IChangeListener, IInteractTile, MenuProvider {
 
-	private int chargeRate = 1000000;
+	private int chargeRate = 20000;
 	private int rateMultiplier = 2;
-	public int maxCharge = 200;
 
 	public final ManagedBool active = register(new ManagedBool("active", false, DataFlags.SAVE_BOTH_SYNC_TILE, DataFlags.TRIGGER_UPDATE));
 
 	public TileChaosInfuser(BlockPos pos, BlockState state) {
 		super(DAContent.tileChaosInfuser.get(), pos, state);
 		itemHandler = new TileItemStackHandler(this, 2);
-		opStorage = new ModularOPStorage(this, 2000000000, 20000000, 20000000);
+		opStorage = new ModularOPStorage(this, 10000000, 100000, 100000);
 		capManager.setManaged("energy", CapabilityOP.OP, opStorage).saveBoth().syncContainer();
 		capManager.setInternalManaged("inventory", ForgeCapabilities.ITEM_HANDLER, itemHandler).saveBoth().syncTile();
 		itemHandler.setStackValidator(this::isItemValidForSlot);

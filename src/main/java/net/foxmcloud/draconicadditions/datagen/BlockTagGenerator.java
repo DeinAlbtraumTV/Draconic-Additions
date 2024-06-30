@@ -21,6 +21,8 @@ public class BlockTagGenerator extends BlockTagsProvider {
 	protected void addTags(HolderLookup.Provider pProvider) {
 		tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.add(DAContent.chaosLiquifier.get())
-			.add(DAContent.chaosInfuser.get());
+			.add(DAContent.chaosInfuser.get())
+			.add(DAContent.chaosExtractor.get())
+			.add(DAContent.chaosCrystalizer.get());
 	}
 }

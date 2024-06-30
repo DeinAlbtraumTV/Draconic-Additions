@@ -6,11 +6,17 @@ import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.init.TechProperties;
 
 import net.foxmcloud.draconicadditions.DraconicAdditions;
+import net.foxmcloud.draconicadditions.blocks.machines.ChaosCrystalizer;
+import net.foxmcloud.draconicadditions.blocks.machines.ChaosExtractor;
 import net.foxmcloud.draconicadditions.blocks.machines.ChaosInfuser;
 import net.foxmcloud.draconicadditions.blocks.machines.ChaosLiquifier;
+import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosCrystalizer;
+import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosExtractor;
 import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosInfuser;
 import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosLiquifier;
 import net.foxmcloud.draconicadditions.inventory.ChaosBaseMenu;
+import net.foxmcloud.draconicadditions.inventory.ChaosCrystalizerMenu;
+import net.foxmcloud.draconicadditions.inventory.ChaosExtractorMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosInfuserMenu;
 import net.foxmcloud.draconicadditions.inventory.ChaosLiquifierMenu;
 import net.foxmcloud.draconicadditions.items.Hermal;
@@ -56,16 +62,24 @@ public class DAContent {
 	// Tile Entities
 	
 	public static final RegistryObject<ChaosLiquifier> chaosLiquifier = BLOCKS.register("chaos_liquifier", () -> new ChaosLiquifier(DEContent.HARDENED_MACHINE));
-	public static final RegistryObject<ChaosInfuser> chaosInfuser     = BLOCKS.register("chaos_infuser",   () -> new ChaosInfuser(DEContent.HARDENED_MACHINE));
-	
     public static final RegistryObject<ItemBlockBCore> itemChaosLiquifier = ITEMS.register("chaos_liquifier", () -> new ItemBlockBCore(chaosLiquifier.get(), new Item.Properties()));
-    public static final RegistryObject<ItemBlockBCore> itemChaosInfuser = ITEMS.register("chaos_infuser", () -> new ItemBlockBCore(chaosInfuser.get(), new Item.Properties()));
-
 	public static final RegistryObject<BlockEntityType<TileChaosLiquifier>> tileChaosLiquifier = TILES_ENTITIES.register("chaos_liquifier", () -> BlockEntityType.Builder.of(TileChaosLiquifier::new, chaosLiquifier.get()).build(null));
-	public static final RegistryObject<BlockEntityType<TileChaosInfuser>> tileChaosInfuser = TILES_ENTITIES.register("chaos_infuser", () -> BlockEntityType.Builder.of(TileChaosInfuser::new, chaosInfuser.get()).build(null));
-
 	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosLiquifier = MENU_TYPES.register("chaos_liquifier", () -> IForgeMenuType.create(ChaosLiquifierMenu::new));
+
+	public static final RegistryObject<ChaosInfuser> chaosInfuser     = BLOCKS.register("chaos_infuser",   () -> new ChaosInfuser(DEContent.HARDENED_MACHINE));
+    public static final RegistryObject<ItemBlockBCore> itemChaosInfuser = ITEMS.register("chaos_infuser", () -> new ItemBlockBCore(chaosInfuser.get(), new Item.Properties()));
+	public static final RegistryObject<BlockEntityType<TileChaosInfuser>> tileChaosInfuser = TILES_ENTITIES.register("chaos_infuser", () -> BlockEntityType.Builder.of(TileChaosInfuser::new, chaosInfuser.get()).build(null));
 	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosInfuser = MENU_TYPES.register("chaos_infuser", () -> IForgeMenuType.create(ChaosInfuserMenu::new));
+
+    public static final RegistryObject<ChaosExtractor> chaosExtractor = BLOCKS.register("chaos_extractor", () -> new ChaosExtractor(DEContent.HARDENED_MACHINE));
+    public static final RegistryObject<ItemBlockBCore> itemChaosExtractor = ITEMS.register("chaos_extractor", () -> new ItemBlockBCore(chaosExtractor.get(), new Item.Properties()));
+	public static final RegistryObject<BlockEntityType<TileChaosExtractor>> tileChaosExtractor = TILES_ENTITIES.register("chaos_extractor", () -> BlockEntityType.Builder.of(TileChaosExtractor::new, chaosExtractor.get()).build(null));
+	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosExtractor = MENU_TYPES.register("chaos_extractor", () -> IForgeMenuType.create(ChaosExtractorMenu::new));
+	
+	public static final RegistryObject<ChaosCrystalizer> chaosCrystalizer = BLOCKS.register("chaos_crystalizer", () -> new ChaosCrystalizer(DEContent.HARDENED_MACHINE));
+    public static final RegistryObject<ItemBlockBCore> itemChaosCrystalizer = ITEMS.register("chaos_crystalizer", () -> new ItemBlockBCore(chaosCrystalizer.get(), new Item.Properties()));
+	public static final RegistryObject<BlockEntityType<TileChaosCrystalizer>> tileChaosCrystalizer = TILES_ENTITIES.register("chaos_crystalizer", () -> BlockEntityType.Builder.of(TileChaosCrystalizer::new, chaosCrystalizer.get()).build(null));
+	public static final RegistryObject<MenuType<ChaosBaseMenu>> menuChaosCrystalizer = MENU_TYPES.register("chaos_crystalizer", () -> IForgeMenuType.create(ChaosCrystalizerMenu::new));
 
 	// Crafting Components
 

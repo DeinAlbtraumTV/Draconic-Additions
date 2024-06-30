@@ -28,6 +28,8 @@ public class ItemModelGenerator extends ItemModelProvider {
 	protected void registerModels() {
 		blockItem(DAContent.chaosLiquifier.get());
 		blockItem(DAContent.chaosInfuser.get());
+		blockItem(DAContent.chaosExtractor.get());
+		blockItem(DAContent.chaosCrystalizer.get());
 		simpleItem(DAContent.chaosHeart.get());
 		simpleItem(DAContent.inertPotatoHelm.get());
 		simpleItem(DAContent.inertPotatoChest.get());

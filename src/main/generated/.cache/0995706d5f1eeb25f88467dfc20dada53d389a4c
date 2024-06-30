@@ -1,5 +1,7 @@
-// 1.20.1	2024-06-15T18:54:26.0028201	Draconic Additions Item Models
+// 1.20.1	2024-06-29T03:55:19.4091739	Draconic Additions Item Models
 575bd887718e34811d70be054b3d15a0855fc5d0 assets/draconicadditions/models/item/chaos_container.json
+31424154cc23e675362d99bf6b48c7ba4aef9a5a assets/draconicadditions/models/item/chaos_crystalizer.json
+11f5ada45a5dbadaa67924b72955d03ae67be55d assets/draconicadditions/models/item/chaos_extractor.json
 325414bedb532eac70276ec1c1a4b869bb79eff3 assets/draconicadditions/models/item/chaos_heart.json
 ee50d5b7793bc98f5c0a0a36f3753cdcda5b7087 assets/draconicadditions/models/item/chaos_infuser.json
 64de24a83c95284b6d567d3311275095fb07d079 assets/draconicadditions/models/item/chaos_liquifier.json

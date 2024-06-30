@@ -1,4 +1,6 @@
-// 1.20.1	2024-06-15T18:54:26.0028201	draconicadditions Recipes.
+// 1.20.1	2024-06-29T03:55:19.4091739	draconicadditions Recipes.
+f95fd9a546d7b807f2bbc5b3697eb2dfa95f7ab4 data/draconicadditions/recipes/blocks/chaos_crystalizer.json
+f09549856ec422409dc6a2bcfadfb53c7dc078e4 data/draconicadditions/recipes/blocks/chaos_extractor.json
 7c040c7343b3df33bfd31a1f32642d726d1c8cd5 data/draconicadditions/recipes/blocks/chaos_infuser.json
 3d457ed22b277659a6ae5455dc72dd2039d8d1d7 data/draconicadditions/recipes/blocks/chaos_liquifier.json
 07c767f737de0a1662c6f81a8865c9f388a0d126 data/draconicadditions/recipes/chaotic_necklace.json

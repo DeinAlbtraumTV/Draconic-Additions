@@ -1,5 +1,7 @@
 package net.foxmcloud.draconicadditions;
 
+import net.foxmcloud.draconicadditions.client.gui.GUIChaosCrystalizer;
+import net.foxmcloud.draconicadditions.client.gui.GUIChaosExtractor;
 import net.foxmcloud.draconicadditions.client.gui.GUIChaosInfuser;
 import net.foxmcloud.draconicadditions.client.gui.GUIChaosLiquifier;
 import net.foxmcloud.draconicadditions.lib.DAContent;
@@ -17,5 +19,7 @@ public class ClientInit {
 	private static void clientSetupEvent(FMLClientSetupEvent event) {
 		MenuScreens.register(DAContent.menuChaosLiquifier.get(), GUIChaosLiquifier.Screen::new);
 		MenuScreens.register(DAContent.menuChaosInfuser.get(), GUIChaosInfuser.Screen::new);
+		MenuScreens.register(DAContent.menuChaosExtractor.get(), GUIChaosExtractor.Screen::new);
+		MenuScreens.register(DAContent.menuChaosCrystalizer.get(), GUIChaosCrystalizer.Screen::new);
 	}
 }

@@ -22,6 +22,8 @@ public class BlockLootProvider extends BlockLootSubProvider {
     protected void generate() {
 		dropSelf(DAContent.chaosLiquifier);
 		dropSelf(DAContent.chaosInfuser);
+		dropSelf(DAContent.chaosExtractor);
+		dropSelf(DAContent.chaosCrystalizer);
 	}
     
     protected void dropSelf(Supplier<? extends Block> pBlock) {

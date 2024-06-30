@@ -31,6 +31,8 @@ public class BlockStateGenerator extends BlockStateProvider {
 		ResourceLocation machineTop = new ResourceLocation(DraconicEvolution.MODID, "block/parts/machine_top");
 		simpleBlock(DAContent.chaosLiquifier.get(), models().cubeBottomTop("chaos_liquifier", modLoc("block/chaos_liquifier_front"), machineTop, machineTop));
 		simpleBlock(DAContent.chaosInfuser.get(), models().cubeBottomTop("chaos_infuser", modLoc("block/chaos_infuser_front"), machineTop, machineTop));
+		simpleBlock(DAContent.chaosExtractor.get(), models().cubeBottomTop("chaos_extractor", modLoc("block/chaos_extractor_front"), machineTop, machineTop));
+		simpleBlock(DAContent.chaosCrystalizer.get(), models().cubeBottomTop("chaos_crystalizer", modLoc("block/chaos_crystalizer_front"), machineTop, machineTop));
 	}
 
 	public void directionalFromNorth(Block block, ModelFile model) {

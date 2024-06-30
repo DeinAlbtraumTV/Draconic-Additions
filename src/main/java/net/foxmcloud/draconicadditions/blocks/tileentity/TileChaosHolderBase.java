@@ -13,9 +13,12 @@ import com.brandon3055.draconicevolution.api.modules.ModuleTypes;
 import com.brandon3055.draconicevolution.api.modules.data.ShieldData;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
 import com.brandon3055.draconicevolution.api.modules.lib.SimpleModuleHost;
+import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.init.ModuleCfg;
 
+import net.foxmcloud.draconicadditions.lib.DAContent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,6 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class TileChaosHolderBase extends TileBCore implements IRSSwitchable {
 	public OPStorage opStorage;
 	public TileItemStackHandler itemHandler;
+	
+	protected static final int maxCharge = 200;
 
 	public final ManagedInt chaos = register(new ManagedInt("chaos", 0, DataFlags.SAVE_BOTH_SYNC_TILE, DataFlags.TRIGGER_UPDATE));
 
@@ -43,5 +48,53 @@ public abstract class TileChaosHolderBase extends TileBCore implements IRSSwitch
 	
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return true;
+	}
+	
+	public static int calcChaos(ItemStack stack) {
+		switch (chaosID(stack.getItem())) {
+		case 1:
+			return 11664;
+		case 2:
+			return 1296;
+		case 3:
+			return 144;
+		case 4:
+			return 16;
+		case 5:
+			return 20000;
+		default:
+			return 0;
+		}
+	}
+
+	public int calcCharge(ItemStack stack) {
+		switch (chaosID(stack.getItem())) {
+		case 1:
+			return (int)(maxCharge / 1.5);
+		case 2:
+			return maxCharge / 4;
+		case 3:
+			return maxCharge / 8;
+		case 4:
+			return maxCharge / 16;
+		case 5:
+			return maxCharge;
+		default:
+			return 0;
+		}
+	}
+
+	public static int chaosID(Item item) {
+		if (item == DEContent.CHAOS_SHARD.get())
+			return 1;
+		else if (item == DEContent.CHAOS_FRAG_LARGE.get())
+			return 2;
+		else if (item == DEContent.CHAOS_FRAG_MEDIUM.get())
+			return 3;
+		else if (item == DEContent.CHAOS_FRAG_SMALL.get())
+			return 4;
+		else if (item == DAContent.chaosHeart.get())
+			return 5;
+		else return 0;
 	}
 }
