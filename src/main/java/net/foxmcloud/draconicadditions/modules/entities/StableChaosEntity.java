@@ -25,7 +25,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 
-public class StableChaosEntity extends ModuleEntity<StableChaosData> implements Comparable {
+public class StableChaosEntity extends ModuleEntity<StableChaosData> implements Comparable<StableChaosEntity> {
 	private static final double rfCostLimit = 1000000;
 	private int chaos = 0;
 	private float instability = 0;
@@ -135,9 +135,9 @@ public class StableChaosEntity extends ModuleEntity<StableChaosData> implements 
 		tooltip.add(Component.translatable("info.da.instability", instability, data.getMaxInstability()));
 		tooltip.add(Component.translatable("info.da.opCost", getRFCost()));
 	}
-
+	
 	@Override
-	public int compareTo(@NotNull Object o) {
+	public int compareTo(StableChaosEntity o) {
 		StableChaosData data = (StableChaosData)module.getData();
 		StableChaosData otherData = (StableChaosData)((StableChaosEntity)o).getModule().getData();
 		return data.getMaxInstability() - otherData.getMaxInstability();
