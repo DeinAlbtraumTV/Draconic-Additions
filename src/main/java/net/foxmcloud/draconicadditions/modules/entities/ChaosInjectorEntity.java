@@ -137,10 +137,10 @@ public class ChaosInjectorEntity extends ModuleEntity<ChaosInjectorData> impleme
 				((Player)entity).getFoodData().tickTimer = 0;
 			}
 			if (isChaotic) {
-				double pointsToDrain = shieldCooldownWhenInjecting ? maxChaos / 8 : chaos / shieldDrainDivider;
+				double pointsToDrain = shieldCooldownWhenInjecting ? chaos / 8.0D : chaos / shieldDrainDivider;
 				if (shield != null && entity instanceof Player player && warningCountdown <= 0) {
 					double factor = (shield.getShieldPoints() / (shield.getShieldCapacity() + (maxChaos / (shieldDrainDivider * 2) * 100))) * 2;
-					if (factor <= 1) {
+					if (factor <= 1 && pointsToDrain > 1) {
 						int cooldownAmount = Math.max((int)Math.round(factor * 40), 2);
 						float pitch = 1.5F + ((float)(1 - factor) * 0.5F);
 						prevWarningCountdown = cooldownAmount;
