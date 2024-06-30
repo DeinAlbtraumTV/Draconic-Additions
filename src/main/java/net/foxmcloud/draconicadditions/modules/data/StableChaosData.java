@@ -30,7 +30,7 @@ public class StableChaosData implements ModuleData<StableChaosData> {
 	}
 
 	@Override
-	public void addInformation(Map<Component, Component> map, ModuleContext context, boolean stack) { //TODO: Remove stack parameter.
+	public void addInformation(Map<Component, Component> map, ModuleContext context) {
 		map.put(Component.translatable("module.draconicadditions.maxChaos.name"), Component.translatable("module.draconicadditions.maxChaos.value", maxChaos));
 		map.put(Component.translatable("module.draconicadditions.maxInstability.name"), Component.translatable("module.draconicadditions.maxInstability.value", maxInstability));
 	}
