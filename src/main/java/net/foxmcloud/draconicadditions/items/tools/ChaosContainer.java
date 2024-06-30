@@ -28,12 +28,15 @@ import net.foxmcloud.draconicadditions.blocks.tileentity.TileChaosHolderBase;
 import net.foxmcloud.draconicadditions.items.IChaosContainer;
 import net.foxmcloud.draconicadditions.items.IModularEnergyItem;
 import net.foxmcloud.draconicadditions.items.ISimpleCountdown;
+import net.foxmcloud.draconicadditions.modules.entities.ChaosInjectorEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -117,21 +120,27 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 			return true;
 		}
 	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-		if (entity instanceof LivingEntity) {
-			LivingEntity ent = (LivingEntity) entity;
-			if (getChaos(stack) > 0 && !ent.isInvulnerableTo(DEDamage.chaosImplosion(entity.level()))) {
-				Vector3 pos = new Vector3(ent.getX(), ent.getY(), ent.getZ());
+	
+	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
+		if (false) { // TODO: DE currently has an issue with DEDamage where it crashes the game.
+			if (getChaos(stack) > 0 && !entity.isInvulnerableTo(DEDamage.chaosImplosion(entity.level()))) {
+				Vector3 pos = new Vector3(entity.getX(), entity.getY(), entity.getZ());
 				CommonMethods.explodeEntity(pos, player.level());
 				if (!player.level().isClientSide) {
-					float damage = Math.min(getChaos(stack), ent.getHealth());
+					float damage = Math.min(getChaos(stack), entity.getHealth());
 					entity.hurt(DEDamage.chaosImplosion(player.level()), damage);
 					removeChaos(stack, (int) Math.floor(damage));
 				}
-				return true;
+				return InteractionResult.SUCCESS;
 			}
+		}
+		return InteractionResult.PASS;
+	}
+
+	@Override
+	public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+		if (entity instanceof LivingEntity ent) {
+			return interactLivingEntity(stack, player, ent, InteractionHand.MAIN_HAND).consumesAction();
 		}
 		return false;
 	}
@@ -158,17 +167,20 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 			}
 			return InteractionResult.SUCCESS;
 		}
-		/*
-		else {
-			IChaosInBlood pCap = player.getCapability(ChaosInBloodProvider.PLAYER_CAP, null);
-			if (pCap != null && player.isEntityAlive() && pCap.getChaos() > 0) {
-				ActionResult<ItemStack> result = onItemRightClick(world, player, hand);
-				stack = result.getResult();
-				return result.getType();
-			}
+		return handleChaosInBlood(player, stack).getResult();
+	}
+	
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+		return handleChaosInBlood(player, player.getItemInHand(hand));
+	}
+	
+	private InteractionResultHolder<ItemStack> handleChaosInBlood(Player player, ItemStack stack) {
+		ChaosInjectorEntity injector = ChaosInjectorEntity.getInjectorEntity(player);
+		if (injector != null && injector.isChaosInBlood()) {
+			removeChaos(stack, injector.modifyChaos(-1));
+			return InteractionResultHolder.success(stack);
 		}
-		 */
-		return InteractionResult.PASS;
+		return InteractionResultHolder.pass(stack);
 	}
 
 	@Override
@@ -240,6 +252,11 @@ public class ChaosContainer extends Item implements IModularEnergyItem, IChaosCo
 				tooltip.add(Component.translatable("modular_item.draconicevolution.requires_energy_press", KeyBindings.toolModules.getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.BLUE));
 			}
 		}
+	}
+	
+	@Override
+	public boolean isEquipped(ItemStack stack, EquipmentSlot slot, boolean inEquipmentSlot) {
+		return false;
 	}
 	
     @Override
