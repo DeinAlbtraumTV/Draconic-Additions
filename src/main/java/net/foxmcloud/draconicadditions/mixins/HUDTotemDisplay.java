@@ -21,23 +21,17 @@ import java.util.List;
 public class HUDTotemDisplay {
 	@ModifyVariable(method = "tick", at = @At("STORE"), name = "totems")
 	private List<UndyingEntity> fixTotemCount(List<UndyingEntity> totems) {
-		//Safeguard, could probably be removed but IDE won't shut up without
 		if (Minecraft.getInstance().player == null) return totems;
-
 		ItemStack necklaceStack = EquipmentManager.findItem((e) -> e.getItem() instanceof ModularNecklace, Minecraft.getInstance().player);
 		LazyOptional<ModuleHost> optionalNecklaceModuleHost = necklaceStack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY);
-
 		if (!necklaceStack.isEmpty() && optionalNecklaceModuleHost.isPresent()) {
 			ModuleHost necklaceHost = optionalNecklaceModuleHost.orElseThrow(IllegalStateException::new);
 			totems.addAll(necklaceHost.getEntitiesByType(ModuleTypes.UNDYING)
 					.map((e) -> (UndyingEntity) e)
 					.sorted(Comparator.comparing((e) -> e.getModule().getModuleTechLevel().index))
 					.toList());
-
-			//Deduplicate in case the player is only wearing the necklace, as DE will already render the totems then
 			totems = totems.stream().distinct().toList();
 		}
-
 		return totems;
 	}
 }
