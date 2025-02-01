@@ -27,11 +27,13 @@ public class HUDTotemDisplay {
 		LazyOptional<ModuleHost> optionalNecklaceModuleHost = necklaceStack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY);
 		if (!necklaceStack.isEmpty() && optionalNecklaceModuleHost.isPresent()) {
 			ModuleHost necklaceHost = optionalNecklaceModuleHost.orElseThrow(IllegalStateException::new);
-			totems.addAll(necklaceHost.getEntitiesByType(ModuleTypes.UNDYING)
-					.map((e) -> (UndyingEntity) e)
-					.sorted(Comparator.comparing((e) -> e.getModule().getModuleTechLevel().index))
-					.toList());
-			totems = totems.stream().distinct().toList();
+			List<UndyingEntity> entities = necklaceHost.getEntitiesByType(ModuleTypes.UNDYING)
+				.map((e) -> (UndyingEntity) e)
+				.sorted(Comparator.comparing((e) -> e.getModule().getModuleTechLevel().index))
+				.toList();
+			if (!totems.containsAll(entities)) {
+				totems.addAll(entities);
+			}
 		}
 		return totems;
 	}
