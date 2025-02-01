@@ -21,8 +21,9 @@ import java.util.List;
 public class HUDTotemDisplay {
 	@ModifyVariable(method = "tick", at = @At("STORE"), name = "totems")
 	private List<UndyingEntity> fixTotemCount(List<UndyingEntity> totems) {
-		if (Minecraft.getInstance().player == null) return totems;
-		ItemStack necklaceStack = EquipmentManager.findItem((e) -> e.getItem() instanceof ModularNecklace, Minecraft.getInstance().player);
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null) return totems;
+		ItemStack necklaceStack = EquipmentManager.findItem((e) -> e.getItem() instanceof ModularNecklace, mc.player);
 		LazyOptional<ModuleHost> optionalNecklaceModuleHost = necklaceStack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY);
 		if (!necklaceStack.isEmpty() && optionalNecklaceModuleHost.isPresent()) {
 			ModuleHost necklaceHost = optionalNecklaceModuleHost.orElseThrow(IllegalStateException::new);
